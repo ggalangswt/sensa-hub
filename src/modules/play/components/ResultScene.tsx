@@ -114,7 +114,7 @@ export default function ResultScene({
       {!isPractice && (
         <div className="mt-4 grid grid-cols-2 gap-3">
           <Button variant="neutral" asChild className="gap-2">
-            <Link href="/vault"><Vault className="w-4 h-4" /> Payout</Link>
+            <Link href="/vault"><Vault className="w-4 h-4" /> Vault</Link>
           </Button>
           <Button variant="neutral" className="gap-2">
             <Share2 className="w-4 h-4" /> Share

@@ -1,23 +1,13 @@
-"use client";
-
-import { Coins, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import UsdcIcon from "@/src/components/elements/UsdcIcon";
 import { formatUsdc } from "@/src/utils/utils";
 
 export default function BalanceCard({
   walletBalance,
   claimable,
-  minting,
-  canClaim,
-  onMint,
 }: {
   walletBalance: number;
   claimable: number;
-  minting: boolean;
-  canClaim: boolean;
-  onMint: () => void;
 }) {
   return (
     <Card className="mb-6 bg-chart-5/10">
@@ -29,22 +19,13 @@ export default function BalanceCard({
           </p>
           {claimable > 0 && (
             <p className="mt-1 flex items-center gap-1 text-xs text-chart-2">
-              +{formatUsdc(claimable)} <UsdcIcon size={12} /> ready in Payout
+              +{formatUsdc(claimable)} <UsdcIcon size={12} /> ready to withdraw
             </p>
           )}
         </div>
-        <Button size="sm" className="gap-1" onClick={onMint} disabled={minting || !canClaim}>
-          {minting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Coins className="w-4 h-4" />
-          )}
-          {canClaim ? (
-            <span className="inline-flex items-center gap-2">Mint 100 <UsdcIcon /></span>
-          ) : (
-            "Cooldown"
-          )}
-        </Button>
+        <p className="max-w-36 text-right text-xs text-foreground/50">
+          Add test USDC to your wallet to enter paid rooms.
+        </p>
       </CardContent>
     </Card>
   );

@@ -1,9 +1,32 @@
 import { GAME_ADDRESS, gameAbi } from "./contracts";
-import { walletClient, publicClient } from "./resolve";
+import { createWalletClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { celoSepolia } from "./wagmi";
+import { publicClient } from "./resolve";
+
+function getBackendPrivateKey() {
+  const value = process.env.BACKEND_PRIVATE_KEY;
+  if (!value) {
+    throw new Error("BACKEND_PRIVATE_KEY is required for on-chain refunds");
+  }
+  if (!/^0x[0-9a-fA-F]{64}$/.test(value)) {
+    throw new Error("BACKEND_PRIVATE_KEY must be a 0x-prefixed 32-byte private key");
+  }
+  return value as `0x${string}`;
+}
+
+function createBackendWalletClient() {
+  return createWalletClient({
+    account: privateKeyToAccount(getBackendPrivateKey()),
+    chain: celoSepolia,
+    transport: http(process.env.NEXT_PUBLIC_RPC_URL),
+  });
+}
 
 export async function backendRefund(
   roundId: string,
 ): Promise<{ txHash: string; refunded: boolean }> {
+  const walletClient = createBackendWalletClient();
   const txHash = await walletClient.writeContract({
     address: GAME_ADDRESS,
     abi: gameAbi,

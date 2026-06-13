@@ -17,13 +17,13 @@ import { usePayout } from "./hooks/usePayout";
 
 export default function Payout() {
   const { address, isConnected } = useWallet();
-  const { claimable, walletBalance, claiming, claim } = usePayout(address);
+  const { claimable, walletBalance, withdrawing, withdraw } = usePayout(address);
 
   return (
     <div className="max-w-2xl mx-auto page-enter">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-heading text-foreground">Payout</h1>
+          <h1 className="text-3xl font-heading text-foreground">Vault</h1>
           <p className="text-foreground/60 text-sm">Withdraw your winnings</p>
         </div>
         <Badge className="bg-chart-2 text-main-foreground">
@@ -33,7 +33,7 @@ export default function Payout() {
 
       <Card className="mb-6 bg-main/10">
         <CardHeader>
-          <CardDescription>CLAIMABLE BALANCE</CardDescription>
+          <CardDescription>WITHDRAWABLE BALANCE</CardDescription>
           <CardTitle className="flex items-center gap-2 text-4xl">
             {formatUsdc(claimable)} <UsdcIcon size={28} />
           </CardTitle>
@@ -41,27 +41,27 @@ export default function Payout() {
         <CardContent>
           <p className="text-sm text-foreground/60 mb-4">
             Win games to earn <UsdcIcon className="mx-1" />. Withdraw your
-            payout anytime.
+            stablecoin anytime. A network fee applies.
           </p>
           <Button
             className="w-full gap-2 text-lg"
             size="lg"
-            onClick={claim}
-            disabled={claiming || claimable <= 0}
+            onClick={withdraw}
+            disabled={withdrawing || claimable <= 0}
           >
-            {claiming ? (
+            {withdrawing ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" /> Claiming...
+                <Loader2 className="w-5 h-5 animate-spin" /> Withdrawing...
               </>
             ) : (
               <>
                 <ArrowUpFromLine className="w-5 h-5" />
                 {claimable > 0 ? (
                   <span className="inline-flex items-center gap-2">
-                    Claim {formatUsdc(claimable)} <UsdcIcon />
+                    Withdraw {formatUsdc(claimable)} <UsdcIcon />
                   </span>
                 ) : (
-                  "Nothing to Claim"
+                  "Nothing to Withdraw"
                 )}
               </>
             )}

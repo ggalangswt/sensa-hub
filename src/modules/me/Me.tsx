@@ -17,7 +17,6 @@ import StatsGrid from "./components/StatsGrid";
 import RecentRounds from "./components/RecentRounds";
 import EditNameModal from "./components/EditNameModal";
 import { useProfile } from "./hooks/useProfile";
-import { useFaucet } from "./hooks/useFaucet";
 import { updateDisplayName } from "./services/profile.service";
 import { EMPTY_PROFILE } from "./types/profile.types";
 import { showSuccessToast } from "@/src/utils/toast";
@@ -29,7 +28,7 @@ export default function MePage() {
 
   const { profileData, loading: profileLoading, reload } = useProfile(address);
 
-  const { data: walletBalanceRaw, refetch: refetchBalance } = useReadContract({
+  const { data: walletBalanceRaw } = useReadContract({
     address: USDC_ADDRESS,
     abi: usdcAbi,
     functionName: "balanceOf",
@@ -47,10 +46,6 @@ export default function MePage() {
 
   const walletBalance = walletBalanceRaw ? Number(walletBalanceRaw) / 1e6 : 0;
   const claimable = claimableRaw ? Number(claimableRaw) / 1e6 : 0;
-
-  const { minting, canClaim, mint } = useFaucet(address, () =>
-    refetchBalance(),
-  );
 
   const displayedProfile = address ? profileData : EMPTY_PROFILE;
 
@@ -98,9 +93,6 @@ export default function MePage() {
         <BalanceCard
           walletBalance={walletBalance}
           claimable={claimable}
-          minting={minting}
-          canClaim={canClaim}
-          onMint={mint}
         />
 
         <StatsGrid profile={displayedProfile} />

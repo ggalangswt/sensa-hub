@@ -12,7 +12,7 @@ import { showErrorToast, showSuccessToast } from "@/src/utils/toast";
 
 export function usePayout(address: string | null) {
   const { writeContractAsync } = useWriteContract();
-  const [claiming, setClaiming] = useState(false);
+  const [withdrawing, setWithdrawing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { data: claimableRaw, refetch: refetchClaimable } = useReadContract({
@@ -41,20 +41,20 @@ export function usePayout(address: string | null) {
   const walletBalance = walletBalanceRaw ? Number(walletBalanceRaw) / 1e6 : 0;
   const reserveBalance = reserveRaw ? Number(reserveRaw) / 1e6 : 0;
 
-  const claim = async () => {
+  const withdraw = async () => {
     if (!address || claimable <= 0) return;
     try {
-      setClaiming(true);
+      setWithdrawing(true);
       setError(null);
       await writeContractAsync({
         address: GAME_ADDRESS,
         abi: gameAbi,
         functionName: "withdraw",
       });
-      showSuccessToast("Payout submitted", {
+      showSuccessToast("Withdraw submitted", {
         description:
           "Your withdrawal is on-chain. Balance will refresh shortly.",
-        id: "vault-claim-submitted",
+        id: "vault-withdraw-submitted",
       });
       setTimeout(() => {
         refetchClaimable();
@@ -64,14 +64,14 @@ export function usePayout(address: string | null) {
       const e = err as { shortMessage?: string; message?: string };
       const message = e?.shortMessage || e?.message || "Unknown error";
       setError(message);
-      showErrorToast("Claim failed", {
+      showErrorToast("Withdraw failed", {
         description: message,
-        id: `vault-claim-error:${message}`,
+        id: `vault-withdraw-error:${message}`,
       });
     } finally {
-      setClaiming(false);
+      setWithdrawing(false);
     }
   };
 
-  return { claimable, walletBalance, reserveBalance, claiming, error, claim };
+  return { claimable, walletBalance, reserveBalance, withdrawing, error, withdraw };
 }
