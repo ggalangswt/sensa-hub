@@ -59,14 +59,14 @@ export function useResultPolling(
             } else if (res.waiting || res.resolving || res.message === "Resolution in progress") {
               const result = await waitForResult(roundId);
               if (result) onResolved(result);
-              else onError("Round resolution is still in progress. Check again shortly or open Payout.");
+              else onError("Round resolution is still in progress. Check again shortly or open Vault.");
             } else if (res.onChainError) {
               onError(`Failed to resolve round: ${res.onChainError}`);
             } else {
-              onError("Failed to resolve round. Check Payout to withdraw or request a refund.");
+              onError("Failed to resolve round. Check Vault to withdraw or request a refund.");
             }
           } catch {
-            onError("Connection failed. Check Payout to withdraw or request a refund.");
+            onError("Connection failed. Check Vault to withdraw or request a refund.");
           }
         }
       }, 2000);

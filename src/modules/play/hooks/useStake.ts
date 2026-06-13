@@ -13,9 +13,8 @@ import { ONE_BILLION_USDC } from "../types/play.types";
 
 export type StakingStep = "approve" | "deposit";
 
-// Monad testnet's RPC sometimes returns null for eth_estimateGas, causing viem
-// to crash with "Cannot destructure property 'gasLimit' … is null". Explicit
-// gas limits bypass estimation entirely.
+// Some mobile wallet RPCs can fail gas estimation; explicit limits keep the
+// MiniPay staking flow deterministic.
 const GAS_APPROVE  = BigInt(120_000);
 const GAS_DEPOSIT  = BigInt(500_000);
 

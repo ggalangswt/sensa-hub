@@ -8,30 +8,42 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { GAME_ADDRESS, gameAbi } from "./contracts";
-import { monadTestnet } from "./wagmi";
+import { celoSepolia } from "./wagmi";
 
 const CHAIN_ID = 11142220;
-const DUMMY_PRIVATE_KEY =
-  "0x0000000000000000000000000000000000000000000000000000000000000001" as const;
 
-export const signerAccount = privateKeyToAccount(
-  (process.env.SIGNER_PRIVATE_KEY || DUMMY_PRIVATE_KEY) as `0x${string}`,
-);
+function getPrivateKey(name: "SIGNER_PRIVATE_KEY" | "BACKEND_PRIVATE_KEY") {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} is required for on-chain settlement`);
+  }
+  if (!/^0x[0-9a-fA-F]{64}$/.test(value)) {
+    throw new Error(`${name} must be a 0x-prefixed 32-byte private key`);
+  }
+  return value as `0x${string}`;
+}
 
-const backendAccount = privateKeyToAccount(
-  (process.env.BACKEND_PRIVATE_KEY || DUMMY_PRIVATE_KEY) as `0x${string}`,
-);
+export function getSignerAccount() {
+  return privateKeyToAccount(getPrivateKey("SIGNER_PRIVATE_KEY"));
+}
+
+function getBackendAccount() {
+  return privateKeyToAccount(getPrivateKey("BACKEND_PRIVATE_KEY"));
+}
 
 export const publicClient = createPublicClient({
-  chain: monadTestnet,
+  chain: celoSepolia,
   transport: http(process.env.NEXT_PUBLIC_RPC_URL),
 });
 
-export const walletClient = createWalletClient({
-  account: backendAccount,
-  chain: monadTestnet,
-  transport: http(process.env.NEXT_PUBLIC_RPC_URL),
-});
+function createBackendWalletClient() {
+  const backendAccount = getBackendAccount();
+  return createWalletClient({
+    account: backendAccount,
+    chain: celoSepolia,
+    transport: http(process.env.NEXT_PUBLIC_RPC_URL),
+  });
+}
 
 export function toTierEnum(tierName: string): number {
   switch (tierName) {
@@ -56,6 +68,9 @@ export async function signAndResolve(
   soloRake: bigint,
   drainSoloReserve: boolean,
 ): Promise<{ txHash: string; resolved: boolean }> {
+  const signerAccount = getSignerAccount();
+  const backendAccount = getBackendAccount();
+  const walletClient = createBackendWalletClient();
   const roundIdHex = roundId as `0x${string}`;
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 5 * 60);
   const totalRewards = rewards.reduce((sum, reward) => sum + reward, BigInt(0));

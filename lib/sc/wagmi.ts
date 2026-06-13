@@ -23,8 +23,6 @@ export const celoSepolia = defineChain({
   testnet: true,
 });
 
-export const monadTestnet = celoSepolia;
-
 export const config = createConfig({
   chains: [celoSepolia],
   connectors: [injected()],
