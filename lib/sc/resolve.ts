@@ -10,7 +10,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { GAME_ADDRESS, gameAbi } from "./contracts";
 import { monadTestnet } from "./wagmi";
 
-const CHAIN_ID = 10143;
+const CHAIN_ID = 11142220;
 const DUMMY_PRIVATE_KEY =
   "0x0000000000000000000000000000000000000000000000000000000000000001" as const;
 

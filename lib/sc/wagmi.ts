@@ -2,29 +2,34 @@ import { http, createConfig } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { defineChain } from "viem";
 
-export const monadTestnet = defineChain({
-  id: 10143,
-  name: "Monad Testnet",
-  nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
+export const celoSepolia = defineChain({
+  id: 11142220,
+  name: "Celo Sepolia",
+  nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.monad.xyz"],
+      http: [
+        process.env.NEXT_PUBLIC_RPC_URL ||
+          "https://forno.celo-sepolia.celo-testnet.org",
+      ],
     },
   },
   blockExplorers: {
     default: {
-      name: "Monad Explorer",
-      url: "https://testnet.monadexplorer.com",
+      name: "Celo Sepolia Explorer",
+      url: "https://celo-sepolia.blockscout.com",
     },
   },
   testnet: true,
 });
 
+export const monadTestnet = celoSepolia;
+
 export const config = createConfig({
-  chains: [monadTestnet],
+  chains: [celoSepolia],
   connectors: [injected()],
   transports: {
-    [monadTestnet.id]: http(),
+    [celoSepolia.id]: http(),
   },
   ssr: true,
 });
