@@ -4,6 +4,10 @@ import { Loader2, Users, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  RouteHeader,
+  TrustStatusStrip,
+} from "@/src/components/ui/mobile-primitives";
 import { REQUIRED_PLAYERS } from "../types/play.types";
 
 export default function QueueingScene({
@@ -21,20 +25,12 @@ export default function QueueingScene({
   const filled = Math.min(queueCount, required);
 
   return (
-    <div className="max-w-2xl mx-auto page-enter ">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-heading text-foreground">
-            {roomCode ? "Waiting for Friend" : "Finding Match"}
-          </h1>
-          <p className="text-foreground/60 text-sm">
-            {mode === "duel" ? "1 vs 1 Duel" : "5 Player Royale"} · {filled}/{required} players
-          </p>
-        </div>
-        <Badge className="bg-chart-1 text-white">
-          {roomCode ? "FRIEND" : "QUEUED"}
-        </Badge>
-      </div>
+    <div className="max-w-2xl mx-auto page-enter">
+      <RouteHeader
+        eyebrow={<Badge>{roomCode ? "Private" : "Queued"}</Badge>}
+        title={roomCode ? "Waiting for friend" : "Finding match"}
+        description={`${mode === "duel" ? "1v1 Duel" : "5 Player Royale"} · ${filled}/${required} players found`}
+      />
 
       {roomCode && (
         <div className="mb-4 p-3 rounded-base border-2 border-chart-2 bg-chart-2/10 text-center">
@@ -86,9 +82,13 @@ export default function QueueingScene({
             ))}
           </div>
 
-          <p className="mt-4 text-center text-sm text-foreground/50">
-            Waiting for available players...
-          </p>
+          <TrustStatusStrip
+            tone="warning"
+            title="Waiting for enough players"
+            className="mt-4 shadow-none"
+          >
+            Keep this page open. You will Deposit after a match is ready.
+          </TrustStatusStrip>
         </CardContent>
       </Card>
 
