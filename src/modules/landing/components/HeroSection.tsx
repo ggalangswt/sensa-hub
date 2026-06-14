@@ -11,16 +11,6 @@ export default function HeroSection({ onPlay }: { onPlay: () => void }) {
   return (
     <section className="landing-hero px-4 py-10 sm:py-16">
       <div className="relative z-10 text-center max-w-3xl mx-auto">
-        <div className="hidden md:block absolute -left-32 top-8">
-          <div className="w-20 h-20 color-swatch float-swatch-1" style={{ background: "hsl(280, 70%, 60%)" }} />
-        </div>
-        <div className="hidden md:block absolute -right-28 top-20">
-          <div className="w-16 h-16 color-swatch float-swatch-2" style={{ background: "hsl(160, 65%, 50%)" }} />
-        </div>
-        <div className="hidden md:block absolute -left-20 bottom-24">
-          <div className="w-14 h-14 color-swatch float-swatch-3" style={{ background: "hsl(40, 90%, 65%)" }} />
-        </div>
-
         <Badge className="mb-5 text-sm sm:mb-6">Brain skill games on Celo</Badge>
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading leading-tight mb-5 sm:mb-6 text-foreground">
           Train Fast.<br />
