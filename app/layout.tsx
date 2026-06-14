@@ -26,7 +26,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Sensa",
   description:
-    "Trust your eyes, match colors from memory, and win USDm on the Celo blockchain. Play solo or compete with others.",
+    "A mobile-first brain skill game hub on Celo. Train memory, focus, timing, and pattern recognition with free and Stablecoin play.",
 };
 
 export const viewport: Viewport = {
@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
-  themeColor: "#c59ad8",
+  themeColor: "#422057",
 };
 
 export default function RootLayout({
