@@ -9,7 +9,7 @@ export default function Footer() {
             </div>
             <span className="font-heading text-foreground">Sensa</span>
           </div>
-          <p className="text-sm text-foreground/50">Color memory game on Celo blockchain. Built with 🎨.</p>
+          <p className="text-sm text-foreground/50">Brain skill game hub on Celo. Built for MiniPay play.</p>
           <div className="flex gap-4 text-sm text-foreground/60">
             <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
             <a href="#" className="hover:text-foreground transition-colors">Discord</a>
@@ -21,7 +21,7 @@ export default function Footer() {
       <div className="border-t-2 border-border bg-main text-main-foreground overflow-hidden">
         <div className="flex whitespace-nowrap">
           <div className="animate-marquee flex items-center h-8 text-xs font-base tracking-wide">
-            {["RESERVE POOL: 4,827 USDm", "TVL: 248,000", "127 PLAYERS ONLINE", "TOP HIT: $12,480"].flatMap((item, i) => [
+            {["MEMORY", "TIMING", "PATTERNS", "PRIVATE ROOMS", "VAULT WITHDRAW"].flatMap((item, i) => [
               <span key={item} className="px-4">{item}</span>,
               <span key={`dot-${i}`} className="px-4">·</span>,
             ])}
