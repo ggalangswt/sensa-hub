@@ -1,9 +1,13 @@
 "use client";
 
-import { Check, Loader2, Vault } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  RouteHeader,
+  TrustStatusStrip,
+} from "@/src/components/ui/mobile-primitives";
 import { addrTone, toneBg, shortAddr, addrInitials } from "@/src/utils/address";
 import { REQUIRED_PLAYERS } from "../types/play.types";
 
@@ -34,16 +38,11 @@ export default function MatchedLobbyScene({
 
   return (
     <div className="max-w-2xl mx-auto page-enter">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-heading text-foreground">Match Found</h1>
-          <p className="text-foreground/60 text-sm">
-            {mode === "duel" ? "1 vs 1 Duel" : "5 Player Royale"} ·{" "}
-            {Math.min(players.length, required)}/{required} players
-          </p>
-        </div>
-        <Badge className="bg-chart-2 text-white">MATCHED</Badge>
-      </div>
+      <RouteHeader
+        eyebrow={<Badge className="bg-chart-2 text-foreground">Matched</Badge>}
+        title="Deposit to ready"
+        description={`${mode === "duel" ? "1v1 Duel" : "5 Player Royale"} · ${Math.min(players.length, required)}/${required} players`}
+      />
 
       <Card className="mb-4">
         <CardContent className="pt-6">
@@ -68,7 +67,7 @@ export default function MatchedLobbyScene({
                         {shortAddr(player)} {isMe ? "(You)" : ""}
                       </p>
                       <p className="text-xs text-foreground/50">
-                        {staked ? "Stake locked" : "Waiting to stake"}
+                        {staked ? "Deposit locked" : "Waiting for Deposit"}
                       </p>
                     </div>
                   </div>
@@ -87,11 +86,11 @@ export default function MatchedLobbyScene({
           </div>
           <div className="mt-6 mx-2 text-sm text-foreground/60">
             {everyoneStaked ? (
-              <span>All players have payed. Match is about to start.</span>
+                <span>All players have Deposited. Match is about to start.</span>
             ) : myStaked ? (
-              <span>Waiting for several player(s) to pay</span>
+              <span>Waiting for other players to Deposit</span>
             ) : (
-              <span>Pay to ready up</span>
+              <span>Deposit to ready up</span>
             )}
           </div>
         </CardContent>
@@ -112,13 +111,18 @@ export default function MatchedLobbyScene({
           onClick={onStake}
         >
           {staking ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> Paying...</>
+            <><Loader2 className="w-4 h-4 animate-spin" /> Depositing...</>
           ) : myStaked ? (
-            <><Check className="w-4 h-4" /> Payed</>
+            <><Check className="w-4 h-4" /> Deposited</>
           ) : (
-            <> Pay 10 USDm</>
+            <>Deposit 10 USDC</>
           )}
         </Button>
+      )}
+      {!myStaked && countdown === null && (
+        <TrustStatusStrip tone="info" title="Network fee applies" className="mt-4">
+          Your Stablecoin stays locked until the result resolves or refunds to Vault.
+        </TrustStatusStrip>
       )}
     </div>
   );
