@@ -11,6 +11,7 @@ import {
 } from "@/lib/sc/contracts";
 import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/src/components/layouts/AppLayout";
+import { RouteHeader } from "@/src/components/ui/mobile-primitives";
 import ProfileCard from "./components/ProfileCard";
 import BalanceCard from "./components/BalanceCard";
 import StatsGrid from "./components/StatsGrid";
@@ -71,15 +72,11 @@ export default function MePage() {
   return (
     <AppLayout>
       <div className="max-w-2xl mx-auto page-enter">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-heading text-foreground">Me</h1>
-            <p className="text-foreground/60 text-sm">
-              Your color-matching stats
-            </p>
-          </div>
-          <Badge className="bg-chart-2 text-main-foreground">CONNECTED</Badge>
-        </div>
+        <RouteHeader
+          eyebrow={<Badge className="bg-chart-2 text-foreground">Connected</Badge>}
+          title={displayName ?? "Your profile"}
+          description="Nickname, Vault summary, and your recent brain-skill rounds."
+        />
 
         {address && (
           <ProfileCard
