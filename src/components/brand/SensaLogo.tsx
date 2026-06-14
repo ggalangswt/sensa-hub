@@ -26,7 +26,7 @@ export function SensaLogo({ size = "md", className }: SensaLogoProps) {
       width={pixelSize}
       height={pixelSize}
       priority={size === "md"}
-      className={cn("rounded-[12px] object-contain", sizeClass[size], className)}
+      className={cn("rounded-[8px] object-contain", sizeClass[size], className)}
     />
   );
 }
