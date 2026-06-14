@@ -17,15 +17,15 @@ export default function ProfileCard({
   onDisconnect: () => void;
 }) {
   return (
-    <Card className="mb-6 bg-main/10">
+    <Card className="mb-6">
       <CardContent className="pt-6 flex items-center gap-4">
-        <div className="w-14 h-14 rounded-full bg-main border-2 border-border flex items-center justify-center text-main-foreground font-heading text-sm shrink-0">
+        <div className="w-14 h-14 rounded-base bg-main border-2 border-border shadow-shadow flex items-center justify-center text-main-foreground font-heading text-sm shrink-0">
           {address.slice(2, 4).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1 min-w-0">
             <p className="font-heading text-foreground text-lg truncate">
-              {displayName ?? "Unnamed"}
+            {displayName ?? "Pick a nickname"}
             </p>
             <button
               type="button"
