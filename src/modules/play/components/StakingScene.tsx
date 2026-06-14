@@ -1,9 +1,13 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Check, Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Check, Loader2, WalletCards } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  RouteHeader,
+  TrustStatusStrip,
+} from "@/src/components/ui/mobile-primitives";
 import UsdcIcon from "@/src/components/elements/UsdcIcon";
 import type { StakingStep } from "../hooks/useStake";
 
@@ -20,36 +24,30 @@ function StepItem({
 }) {
   return (
     <div
-      className={`flex items-center gap-4 p-4 rounded-base border-2 transition-all duration-300 ${
+      className={`flex items-center gap-4 rounded-base border-2 p-4 transition-all ${
         state === "done"
-          ? "border-chart-2 bg-chart-2/10"
+          ? "border-border bg-chart-2/15"
           : state === "active"
-            ? "border-chart-1 bg-chart-1/10 shadow-shadow"
-            : "border-border bg-secondary-background opacity-40"
+            ? "border-border bg-main shadow-shadow"
+            : "border-border bg-secondary-background opacity-55"
       }`}
     >
       <div
-        className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-          state === "done"
-            ? "bg-chart-2 border-chart-2 text-white"
-            : state === "active"
-              ? "bg-chart-1 border-chart-1 text-white"
-              : "bg-secondary-background border-border text-foreground/40"
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border font-heading ${
+          state === "active" ? "bg-foreground text-background" : "bg-secondary-background"
         }`}
       >
         {state === "done" ? (
-          <Check className="w-4 h-4" />
+          <Check className="h-4 w-4" />
         ) : state === "active" ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          <span className="text-xs font-heading">{num}</span>
+          <span className="text-xs">{num}</span>
         )}
       </div>
-      <div className="flex-1 min-w-0">
-        <p className={`font-heading text-sm ${state === "done" ? "line-through text-foreground/40" : "text-foreground"}`}>
-          {label}
-        </p>
-        <p className="text-xs text-foreground/50 mt-0.5">{desc}</p>
+      <div className="min-w-0 flex-1">
+        <p className="font-heading text-sm text-foreground">{label}</p>
+        <p className="mt-0.5 text-xs leading-relaxed text-foreground/65">{desc}</p>
       </div>
     </div>
   );
@@ -67,45 +65,35 @@ export default function StakingScene({
         {
           label: (
             <span className="inline-flex items-center gap-2">
-              Approve 1 Miliar <UsdcIcon size={14} />
+              Approve Stablecoin <UsdcIcon size={14} />
             </span>
           ),
-          desc: "One-time approval — you will not need to approve again",
+          desc: "One-time wallet approval before this app can Deposit your stake.",
           state: step === "deposit" ? "done" : "active",
         },
         {
-          label: "Deposit Stake",
-          desc: (
-            <span className="inline-flex items-center gap-1">
-              <UsdcIcon size={12} /> is locked in the smart contract until the round ends
-            </span>
-          ),
+          label: "Deposit stake",
+          desc: "Your stake is locked until the round resolves or refunds to Vault.",
           state: step === "deposit" ? "active" : "pending",
         },
       ]
     : [
         {
-          label: "Deposit Stake",
-          desc: (
-            <span className="inline-flex items-center gap-1">
-              <UsdcIcon size={12} /> is locked in the smart contract until the round ends
-            </span>
-          ),
+          label: "Deposit stake",
+          desc: "Your stake is locked until the round resolves or refunds to Vault.",
           state: "active",
         },
       ];
 
   return (
-    <div className="max-w-2xl mx-auto page-enter">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-heading text-foreground">Locking Stake</h1>
-          <p className="text-foreground/60 text-sm">
-            Confirm your transaction, then wait for all matched players to lock stake
-          </p>
-        </div>
-        <Badge className="bg-chart-1 text-white animate-pulse">SIGNING</Badge>
-      </div>
+    <div className="mx-auto max-w-2xl page-enter">
+      <RouteHeader
+        eyebrow={<Badge>Stablecoin</Badge>}
+        title="Deposit stake"
+        description="Confirm in your wallet, then Sensa will move you into the round automatically."
+        action={<WalletCards className="mt-1 h-6 w-6 text-foreground" />}
+      />
+
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-3">
@@ -119,12 +107,17 @@ export default function StakingScene({
               />
             ))}
           </div>
-          <div className="mt-6 flex items-center gap-2 text-xs text-foreground/40">
-            <Loader2 className="w-3 h-3 animate-spin flex-shrink-0" />
-            <span>Waiting for wallet confirmation...</span>
-          </div>
         </CardContent>
       </Card>
+
+      <TrustStatusStrip
+        tone="warning"
+        title="Wallet confirmation in progress"
+        className="mt-4"
+      >
+        A Network fee applies. Do not close this screen until the Deposit
+        finishes.
+      </TrustStatusStrip>
     </div>
   );
 }
