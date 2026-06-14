@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, Crown, RotateCcw, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +12,6 @@ import confetti from "canvas-confetti";
 export default function LeaderboardScene({
   result,
   myAddress,
-  mode,
   onAgain,
 }: {
   result: RoundResult;
@@ -20,14 +19,14 @@ export default function LeaderboardScene({
   mode: Mode;
   onAgain: () => void;
 }) {
-  const scores = result.allScores ?? [];
+  const scores = useMemo(() => result.allScores ?? [], [result.allScores]);
   const n = scores.length;
   const [revealed, setRevealed] = useState(0);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [names, setNames] = useState<Record<string, string | null>>({});
 
-  const REVEAL_START_MS = 600;
-  const REVEAL_STEP_MS = 900;
+  const REVEAL_START_MS = 200;
+  const REVEAL_STEP_MS = 240;
 
   useEffect(() => {
     if (n === 0) return;
@@ -38,7 +37,11 @@ export default function LeaderboardScene({
   }, [n]);
 
   useEffect(() => {
-    if (revealed === n && n > 0) {
+    if (
+      revealed === n &&
+      n > 0 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       const fire = (ratio: number, opts: confetti.Options) =>
         confetti({ origin: { y: 0.4 }, particleCount: Math.floor(200 * ratio), ...opts });
       fire(0.25, { spread: 26, startVelocity: 55 });
@@ -59,8 +62,8 @@ export default function LeaderboardScene({
     const me = scores.find((p) => p.address.toLowerCase() === myAddress?.toLowerCase());
     const rank = me ? scores.indexOf(me) + 1 : 0;
     const text = me
-      ? `I hit ${me.accuracy.toFixed(1)}% (#${rank}) in ${me.timeSec?.toFixed(2) ?? "?"}s on Sensa 🎨`
-      : `Winner: ${result.winnerAccuracy.toFixed(1)}% on Sensa 🎨`;
+      ? `I hit ${me.accuracy.toFixed(1)}% (#${rank}) in ${me.timeSec?.toFixed(2) ?? "?"}s on Sensa`
+      : `Winner: ${result.winnerAccuracy.toFixed(1)}% on Sensa`;
     navigator.clipboard?.writeText(text).then(
       () => { setShareFeedback("Copied!"); setTimeout(() => setShareFeedback(null), 1500); },
       () => setShareFeedback("Failed"),
@@ -69,10 +72,13 @@ export default function LeaderboardScene({
 
   return (
     <div className="max-w-2xl mx-auto page-enter flex flex-col items-center">
-      <div className="w-full max-w-md bg-main/15 rounded-[2rem] p-8">
-        <h2 className="text-xl font-heading text-foreground text-center mb-8 animate-in fade-in slide-in-from-top-2 duration-500 fill-mode-both">
-          Match Result:
+      <div className="w-full max-w-md rounded-base border-2 border-border bg-secondary-background p-5 shadow-shadow sm:p-8">
+        <h2 className="text-xl font-heading text-foreground text-center mb-2 animate-in fade-in slide-in-from-top-2 duration-500 fill-mode-both">
+          Match result
         </h2>
+        <p className="mb-6 text-center text-sm text-foreground/65">
+          Highest score wins. Winnings appear in Vault after settlement.
+        </p>
         <div className="flex flex-col gap-3 mb-8 w-full">
           {scores.map((player, i) => {
             const isWinnerP = player.address.toLowerCase() === result.winner?.toLowerCase();
@@ -84,8 +90,8 @@ export default function LeaderboardScene({
             return (
               <div
                 key={player.address}
-                className={`relative flex items-center justify-between px-4 py-3 rounded-2xl border-2 border-border shadow-shadow transition-all duration-500 ${toneBg(tone)} ${
-                  isWinnerP ? "ring-2 ring-chart-1/40" : ""
+                className={`relative flex items-center justify-between px-4 py-3 rounded-base border-2 border-border shadow-shadow transition-all duration-300 ${toneBg(tone)} ${
+                  isWinnerP ? "ring-4 ring-main" : ""
                 } ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -104,7 +110,7 @@ export default function LeaderboardScene({
                         <Badge className="bg-foreground text-background text-[10px] px-1.5 py-0 h-4">You</Badge>
                       )}
                       {isWinnerP && (
-                        <Crown className="w-3.5 h-3.5 text-chart-3 shrink-0" fill="currentColor" />
+                            <Crown className="w-3.5 h-3.5 text-foreground shrink-0" fill="currentColor" />
                       )}
                     </div>
                     <span className="text-[10px] font-mono text-foreground/50">
@@ -126,13 +132,13 @@ export default function LeaderboardScene({
             revealed === n ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
           }`}
         >
-          <Button onClick={onAgain} className="gap-2 rounded-xl px-6 font-heading min-w-[140px]" size="lg">
+          <Button onClick={onAgain} className="gap-2 rounded-base px-6 font-heading min-w-[140px]" size="lg">
             <RotateCcw className="w-4 h-4" /> Play Again
           </Button>
           <Button
             variant="neutral"
             onClick={handleShare}
-            className="gap-2 rounded-xl px-6 font-heading min-w-[140px] bg-secondary-background"
+            className="gap-2 rounded-base px-6 font-heading min-w-[140px] bg-secondary-background"
             size="lg"
           >
             {shareFeedback ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
