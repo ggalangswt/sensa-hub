@@ -36,7 +36,7 @@ export default function RecentRounds({
           </Card>
         ) : profile.recent_rounds.length === 0 ? (
           <Card className="!py-4">
-            <CardContent className="py-0 text-sm text-foreground/60">No saved rounds yet.</CardContent>
+            <CardContent className="py-0 text-sm text-foreground/60">No brain-skill rounds saved yet.</CardContent>
           </Card>
         ) : (
           profile.recent_rounds.map((round) => (
