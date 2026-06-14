@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-14T21:31:38+07:00",
+  "title": "Design System: Sensa Hub",
+  "extensions": {
+    "colorMeta": {
+      "lime-yellow": {
+        "role": "primary",
+        "displayName": "Lime Yellow",
+        "canonical": "#FDFB51",
+        "tonalRamp": [
+          "oklch(22% 0.08 105)",
+          "oklch(34% 0.10 105)",
+          "oklch(46% 0.12 105)",
+          "oklch(58% 0.14 105)",
+          "oklch(70% 0.16 105)",
+          "oklch(82% 0.17 105)",
+          "oklch(90% 0.15 105)",
+          "oklch(96% 0.10 105)"
+        ]
+      },
+      "dark-purple": {
+        "role": "primary",
+        "displayName": "Dark Purple",
+        "canonical": "#422057",
+        "tonalRamp": [
+          "#16071F",
+          "#261232",
+          "#422057",
+          "#5A3172",
+          "#7B4F96",
+          "#A078B7",
+          "#C9AFD8",
+          "#EFE4F5"
+        ]
+      },
+      "lime-wash": {
+        "role": "neutral",
+        "displayName": "Lime Wash",
+        "canonical": "#FFFEE8",
+        "tonalRamp": [
+          "oklch(22% 0.025 105)",
+          "oklch(36% 0.025 105)",
+          "oklch(50% 0.025 105)",
+          "oklch(64% 0.025 105)",
+          "oklch(78% 0.025 105)",
+          "oklch(88% 0.025 105)",
+          "oklch(94% 0.025 105)",
+          "#FFFEE8"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#1A0B22",
+          "#2A1735",
+          "#4B3657",
+          "#706179",
+          "#998FA0",
+          "#C2BBC7",
+          "#E8E4EA",
+          "#FFFFFF"
+        ]
+      },
+      "success-green": {
+        "role": "secondary",
+        "displayName": "Success Green",
+        "canonical": "#00D696",
+        "tonalRamp": [
+          "oklch(18% 0.12 160)",
+          "oklch(28% 0.12 160)",
+          "oklch(40% 0.12 160)",
+          "oklch(52% 0.12 160)",
+          "oklch(64% 0.12 160)",
+          "oklch(74% 0.12 160)",
+          "oklch(84% 0.08 160)",
+          "oklch(94% 0.04 160)"
+        ]
+      },
+      "warning-amber": {
+        "role": "secondary",
+        "displayName": "Warning Amber",
+        "canonical": "#FACC00",
+        "tonalRamp": [
+          "oklch(20% 0.12 95)",
+          "oklch(32% 0.12 95)",
+          "oklch(44% 0.12 95)",
+          "oklch(56% 0.12 95)",
+          "oklch(68% 0.12 95)",
+          "oklch(78% 0.12 95)",
+          "oklch(88% 0.08 95)",
+          "oklch(96% 0.04 95)"
+        ]
+      },
+      "danger-red": {
+        "role": "secondary",
+        "displayName": "Danger Red",
+        "canonical": "#FF4D50",
+        "tonalRamp": [
+          "oklch(18% 0.16 25)",
+          "oklch(28% 0.16 25)",
+          "oklch(40% 0.16 25)",
+          "oklch(52% 0.16 25)",
+          "oklch(64% 0.16 25)",
+          "oklch(74% 0.13 25)",
+          "oklch(84% 0.08 25)",
+          "oklch(94% 0.04 25)"
+        ]
+      },
+      "info-blue": {
+        "role": "secondary",
+        "displayName": "Info Blue",
+        "canonical": "#0099FF",
+        "tonalRamp": [
+          "oklch(18% 0.14 250)",
+          "oklch(28% 0.14 250)",
+          "oklch(40% 0.14 250)",
+          "oklch(52% 0.14 250)",
+          "oklch(64% 0.14 250)",
+          "oklch(74% 0.11 250)",
+          "oklch(84% 0.07 250)",
+          "oklch(94% 0.04 250)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Major page titles and game state announcements only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Modal titles, result headers, lobby state headers, and section starts."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles, room names, vault rows, and player result names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Instructions, stablecoin states, support copy, and readable explanations."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, badges, form labels, metadata, and compact status text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "structural-shadow",
+        "value": "2px 2px 0px 0px var(--border)",
+        "purpose": "Default tactile depth for cards, buttons, modals, toasts, and game controls."
+      },
+      {
+        "name": "pressed-state",
+        "value": "translate(2px, 2px) with shadow removed",
+        "purpose": "Hover or active feedback for tactile controls."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "150ms-250ms ease-out",
+        "purpose": "Default product UI feedback for state changes."
+      },
+      {
+        "name": "page-enter",
+        "value": "300ms ease-out fade-up",
+        "purpose": "Current light page transition; avoid expanding this into choreography."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "crossfade or instant state",
+        "purpose": "Required alternative for gameplay, result, and transition effects."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "minipay-priority",
+        "value": "360px",
+        "purpose": "Primary design target."
+      },
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "First expansion breakpoint for room, vault, and profile layouts."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action in a state: create, ready, submit, resolve, deposit, or withdraw.",
+      "html": "<button class=\"ds-btn-primary\">Create Room</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 16px; border: 2px solid var(--border, #422057); border-radius: 10px; background: var(--main, #FDFB51); color: var(--main-foreground, #422057); box-shadow: 2px 2px 0 0 var(--border, #422057); font: inherit; font-weight: 500; transition: transform 180ms ease-out, box-shadow 180ms ease-out; } .ds-btn-primary:hover { transform: translate(2px, 2px); box-shadow: none; } .ds-btn-primary:focus-visible { outline: 2px solid var(--ring, #422057); outline-offset: 2px; }"
+    },
+    {
+      "name": "Neutral Button",
+      "kind": "button",
+      "refersTo": "button-neutral",
+      "description": "Secondary action with the same tactile structure but lower priority.",
+      "html": "<button class=\"ds-btn-neutral\">Share</button>",
+      "css": ".ds-btn-neutral { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 16px; border: 2px solid var(--border, #422057); border-radius: 10px; background: var(--secondary-background, #fff); color: var(--foreground, #422057); box-shadow: 2px 2px 0 0 var(--border, #422057); font: inherit; font-weight: 500; transition: transform 180ms ease-out, box-shadow 180ms ease-out; } .ds-btn-neutral:hover { transform: translate(2px, 2px); box-shadow: none; } .ds-btn-neutral:focus-visible { outline: 2px solid var(--ring, #422057); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tactile Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default grouped surface for game modes, lobby state, vault rows, and result panels.",
+      "html": "<section class=\"ds-card\"><h3>Match Result</h3><p>Winner balance is ready in Vault.</p></section>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 2px solid var(--border, #422057); border-radius: 10px; background: var(--background, #FFFEE8); color: var(--foreground, #422057); box-shadow: 2px 2px 0 0 var(--border, #422057); } .ds-card h3 { margin: 0; font-weight: 800; line-height: 1.1; } .ds-card p { margin: 0; font-weight: 500; line-height: 1.5; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Room names, codes, nicknames, and amount-adjacent text entry.",
+      "html": "<input class=\"ds-input\" placeholder=\"Room name\" />",
+      "css": ".ds-input { width: 100%; height: 40px; padding: 8px 12px; border: 2px solid var(--border, #422057); border-radius: 10px; background: var(--secondary-background, #fff); color: var(--foreground, #422057); font: inherit; font-weight: 500; } .ds-input::placeholder { color: color-mix(in srgb, var(--foreground, #422057) 62%, transparent); } .ds-input:focus-visible { outline: 2px solid var(--ring, #422057); outline-offset: 2px; } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge-primary",
+      "description": "Compact mode, stake, room, and state labels.",
+      "html": "<span class=\"ds-badge\">Stablecoin</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: fit-content; padding: 2px 10px; border: 2px solid var(--border, #422057); border-radius: 10px; background: var(--main, #FDFB51); color: var(--main-foreground, #422057); font-size: 12px; font-weight: 500; line-height: 1.25; white-space: nowrap; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Tactile Arcade Ledger",
+    "overview": "Sensa Hub is a product UI for a mobile-first Celo skill game. It should feel like a pocket arcade machine: direct, physical, playful, and fast. The same surface also carries stake, refund, result, vault, and withdraw states, so every money moment must feel calm and legible.",
+    "keyCharacteristics": [
+      "Mobile-first, MiniPay-first, and thumb-friendly at 360px.",
+      "Lime Yellow primary actions against Dark Purple structural UI.",
+      "Tactile neobrutalist surfaces with dark purple borders and hard shadows.",
+      "One primary action per state, especially in room, stake, refund, result, vault, and withdraw flows.",
+      "Neutral active gameplay surfaces so surrounding UI color does not bias the player.",
+      "Trustworthy stablecoin copy that avoids blockchain jargon."
+    ],
+    "rules": [
+      {
+        "name": "The Lime Means Action Rule",
+        "body": "Lime Yellow is for the next action, selected state, and important game feedback. Do not use it as a background wash across whole screens.",
+        "section": "colors"
+      },
+      {
+        "name": "The Purple Carries Trust Rule",
+        "body": "Dark Purple should hold structure: borders, stage areas, nav, wallet states, and serious copy. It keeps the game from feeling like a toy when money is involved.",
+        "section": "colors"
+      },
+      {
+        "name": "The Game Neutrality Rule",
+        "body": "During active color gameplay, the app must switch to monochrome surfaces. Lime, purple, green, amber, red, and blue must not surround the player's color judgment area.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Color Rule",
+        "body": "Green, amber, red, and blue are semantic. If a color does not explain state or feedback, remove it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Short Copy Rule",
+        "body": "Product copy must be short, direct, and task-focused. Long prose belongs only in support, terms, privacy, and onboarding explanations.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Badge Soup Rule",
+        "body": "Labels can be badge-like, but every line of UI must not become a badge. Use badges for mode, state, price, online count, and room identity only.",
+        "section": "typography"
+      },
+      {
+        "name": "The Structural Shadow Rule",
+        "body": "If a surface has a 2px dark purple border, its shadow must be hard and aligned to the token. Do not add soft 16px+ blur shadows to the same element.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Modal Restraint Rule",
+        "body": "Modals are for blocking decisions only. Multi-step room or wallet tasks should prefer step views when inline progression is clearer on mobile.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do design for 360px mobile first, then expand to wider screens.",
+      "Do use Lime Yellow (#FDFB51) and Dark Purple (#422057) as the main Sensa combination.",
+      "Do keep Dark Purple as the structural border, stage, and trust color.",
+      "Do keep Lime Yellow reserved for primary actions, selected states, and meaningful game feedback.",
+      "Do keep primary actions visually singular on each state screen.",
+      "Do use MiniPay-safe language: Stablecoin, Deposit, Withdraw, Network fee.",
+      "Do keep money states calm, explicit, and recoverable.",
+      "Do use neutral monochrome surfaces during active color gameplay.",
+      "Do replace legacy brand references with Sensa and Celo."
+    ],
+    "donts": [
+      "Don't use generic DeFi dashboard patterns: token tables, yield language, protocol jargon, or wallet-first framing.",
+      "Don't use casino UI: flashing rewards, fake jackpot hype, manipulative urgency, or cluttered badges.",
+      "Don't use generic SaaS polish; the lime-and-purple pairing must serve action, trust, and game structure.",
+      "Don't flood whole screens with Lime Yellow. If everything is highlighted, nothing is actionable.",
+      "Don't use Gas, crypto, onramp, or offramp in user-facing copy.",
+      "Don't present a raw wallet address as the primary user identity.",
+      "Don't leave legacy source brand or network references in user-facing UI, metadata, placeholder content, or docs.",
+      "Don't combine the Sensa 2px border language with soft decorative glassmorphism or wide ghost-card shadows."
+    ]
+  }
+}
