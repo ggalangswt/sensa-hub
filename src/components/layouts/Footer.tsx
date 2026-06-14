@@ -21,7 +21,7 @@ export default function Footer() {
       <div className="border-t-2 border-border bg-main text-main-foreground overflow-hidden">
         <div className="flex whitespace-nowrap">
           <div className="animate-marquee flex items-center h-8 text-xs font-base tracking-wide">
-            {["RESERVE POOL: 4,827 USDm", "TVL: 248,000", "127 PLAYERS ONLINE", "JACKPOT: $12,480"].flatMap((item, i) => [
+            {["RESERVE POOL: 4,827 USDm", "TVL: 248,000", "127 PLAYERS ONLINE", "TOP HIT: $12,480"].flatMap((item, i) => [
               <span key={item} className="px-4">{item}</span>,
               <span key={`dot-${i}`} className="px-4">·</span>,
             ])}

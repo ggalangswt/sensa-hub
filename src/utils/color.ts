@@ -94,9 +94,11 @@ export function tier(acc: number): {
   payout: number;
   color: string;
 } {
-  if (acc >= 98) return { name: "JACKPOT", payout: 10.0, color: "wf-fill-pk" };
-  if (acc >= 90) return { name: "GREAT", payout: 7.5, color: "wf-fill-g" };
-  if (acc >= 75) return { name: "GOOD", payout: 6.0, color: "wf-fill-y" };
+  if (acc > 98) return { name: "WHAT?!", payout: 10.0, color: "wf-fill-pk" };
+  if (acc > 95) return { name: "GREAT", payout: 8.0, color: "wf-fill-g" };
+  if (acc > 90) return { name: "GOOD", payout: 6.0, color: "wf-fill-y" };
+  if (acc > 75) return { name: "OK", payout: 4.0, color: "wf-fill-y" };
+  if (acc > 50) return { name: "MEH", payout: 2.0, color: "wf-fill-r" };
   return { name: "MISS", payout: 0, color: "wf-fill-r" };
 }
 

@@ -8,9 +8,11 @@ import type { ProfileData } from "../types/profile.types";
 
 function tierCardClass(tierName: string): string {
   switch (tierName) {
-    case "JACKPOT": return "bg-chart-1/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
+    case "WHAT?!": return "bg-chart-1/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
     case "GREAT":   return "bg-chart-2/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
     case "GOOD":    return "bg-chart-3/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
+    case "OK":      return "bg-chart-5/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
+    case "MEH":     return "bg-chart-4/20 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
     default:        return "bg-chart-4/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
   }
 }

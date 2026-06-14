@@ -157,10 +157,12 @@ export default function SelectScene({
                 <p className="text-xs font-heading text-foreground/70 mb-3 uppercase tracking-wider">Payout per Accuracy</p>
                 <div className="flex flex-col gap-2">
                   {[
-                    { tier: "JACKPOT", acc: "≥ 98%", reward: "10.0 USDm", color: "bg-chart-1" },
-                    { tier: "GREAT",   acc: "≥ 90%", reward: "7.5 USDm",  color: "bg-chart-2" },
-                    { tier: "GOOD",    acc: "≥ 75%", reward: "6.0 USDm",  color: "bg-chart-3" },
-                    { tier: "MISS",    acc: "< 75%", reward: "0 USDm",    color: "bg-chart-4" },
+                    { tier: "WHAT?!", acc: "> 98%", reward: "10.0 USDm", color: "bg-chart-1" },
+                    { tier: "GREAT",  acc: "> 95%", reward: "8.0 USDm",  color: "bg-chart-2" },
+                    { tier: "GOOD",   acc: "> 90%", reward: "6.0 USDm",  color: "bg-chart-3" },
+                    { tier: "OK",     acc: "> 75%", reward: "4.0 USDm",  color: "bg-chart-5" },
+                    { tier: "MEH",    acc: "> 50%", reward: "2.0 USDm",  color: "bg-chart-4" },
+                    { tier: "MISS",   acc: "≤ 50%", reward: "0 USDm",    color: "bg-secondary-background" },
                   ].map((entry) => (
                     <div key={entry.tier} className="flex items-center justify-between py-1.5 px-3 rounded-base border border-border/50">
                       <div className="flex items-center gap-2">

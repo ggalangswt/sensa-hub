@@ -21,8 +21,8 @@ export default function GameModesSection() {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-chart-3 text-main-foreground">JACKPOT 10.0</Badge>
-                <Badge className="bg-chart-2 text-main-foreground">GREAT 7.5</Badge>
+                <Badge className="bg-chart-3 text-main-foreground">WHAT?! 10.0</Badge>
+                <Badge className="bg-chart-2 text-main-foreground">GREAT 8.0</Badge>
               </div>
             </CardContent>
           </Card>

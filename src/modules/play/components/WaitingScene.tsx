@@ -8,9 +8,11 @@ import type { Mode } from "../types/play.types";
 
 function tierBgClass(name: string): string {
   switch (name) {
-    case "JACKPOT": return "bg-chart-1 text-white";
+    case "WHAT?!": return "bg-chart-1 text-white";
     case "GREAT":   return "bg-chart-2 text-white";
     case "GOOD":    return "bg-chart-3 text-foreground";
+    case "OK":      return "bg-chart-5 text-foreground";
+    case "MEH":     return "bg-chart-4 text-white";
     default:        return "bg-chart-4 text-white";
   }
 }

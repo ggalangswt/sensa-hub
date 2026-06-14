@@ -11,12 +11,16 @@ function sanitizeDisplayName(value: unknown): string {
 
 function tierLabelFromEnum(tier: number | null): string {
   switch (tier) {
+    case 5:
+      return "WHAT?!";
     case 4:
-      return "JACKPOT";
-    case 3:
       return "GREAT";
-    case 2:
+    case 3:
       return "GOOD";
+    case 2:
+      return "OK";
+    case 1:
+      return "MEH";
     default:
       return "MISS";
   }

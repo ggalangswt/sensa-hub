@@ -35,7 +35,7 @@ export default function HowItWorksSection() {
                 <Trophy className="w-8 h-8 text-main-foreground" />
               </div>
               <CardTitle className="text-xl">3. Win</CardTitle>
-              <CardDescription>Your accuracy determines your payout. ≥98% accuracy hits the JACKPOT — up to 2.0x return!</CardDescription>
+              <CardDescription>Your accuracy determines your payout. Over 98% accuracy hits WHAT?! — up to 2.0x return.</CardDescription>
             </CardHeader>
           </Card>
         </div>

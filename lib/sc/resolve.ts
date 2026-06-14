@@ -47,12 +47,17 @@ function createBackendWalletClient() {
 
 export function toTierEnum(tierName: string): number {
   switch (tierName) {
-    case "JACKPOT":
-      return 4;
+    case "WHAT?!":
+    case "WHAT":
+      return 5;
     case "GREAT":
-      return 3;
+      return 4;
     case "GOOD":
+      return 3;
+    case "OK":
       return 2;
+    case "MEH":
+      return 1;
     default:
       return 0;
   }

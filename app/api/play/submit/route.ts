@@ -15,12 +15,17 @@ function soloRewardAmount(tierName: string): {
   tierEnum: number;
 } {
   switch (tierName) {
-    case "JACKPOT":
-      return { reward: BigInt(10_000_000), tierEnum: 4 };
+    case "WHAT?!":
+    case "WHAT":
+      return { reward: BigInt(10_000_000), tierEnum: 5 };
     case "GREAT":
-      return { reward: BigInt(7_500_000), tierEnum: 3 };
+      return { reward: BigInt(8_000_000), tierEnum: 4 };
     case "GOOD":
-      return { reward: BigInt(6_000_000), tierEnum: 2 };
+      return { reward: BigInt(6_000_000), tierEnum: 3 };
+    case "OK":
+      return { reward: BigInt(4_000_000), tierEnum: 2 };
+    case "MEH":
+      return { reward: BigInt(2_000_000), tierEnum: 1 };
     default:
       return { reward: BigInt(0), tierEnum: 0 };
   }
