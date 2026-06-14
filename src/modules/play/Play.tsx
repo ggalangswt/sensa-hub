@@ -68,6 +68,7 @@ export default function PlayClient({
   const [matchedStakeSubmitting, setMatchedStakeSubmitting] = useState(false);
   const [matchedCountdown, setMatchedCountdown] = useState<number | null>(null);
   const [initRoomJoined, setInitRoomJoined] = useState(false);
+  const [soloRefunded, setSoloRefunded] = useState(false);
 
   const guessStartRef = useRef<number>(0);
   const phaseRef = useRef<{ address?: string; mode: Mode; phase: Phase }>({
@@ -121,6 +122,7 @@ export default function PlayClient({
       setMatchedCountdown(null);
       setRoundId(newRoundId);
       setRoundResult(null);
+      setSoloRefunded(false);
       setDifficulty("medium");
       setTarget(targetFromRoundId(newRoundId, "medium"));
       setGuess({ h: 180, s: 50, l: 50 });
@@ -150,6 +152,7 @@ export default function PlayClient({
     setMatchedPlayers(room.players.map((p) => p.address));
     setRoundId(room.roundId);
     setRoundResult(null);
+    setSoloRefunded(false);
     setTarget(targetFromRoundId(room.roundId, room.difficulty ?? "medium"));
     setGuess({ h: 180, s: 50, l: 50 });
     setIsPractice(false);
@@ -317,6 +320,7 @@ export default function PlayClient({
     setDifficulty(nextDiff);
     setIsPractice(practice);
     setRoundResult(null);
+    setSoloRefunded(false);
 
     if (practice) {
       try {
@@ -408,7 +412,7 @@ export default function PlayClient({
       }
     } else {
       try {
-        await apiSubmitGuess({
+        const res = await apiSubmitGuess({
           target,
           guess,
           mode,
@@ -417,6 +421,13 @@ export default function PlayClient({
           isPractice,
           timeSec,
         });
+        if (res.refunded) {
+          setSoloRefunded(true);
+          showSuccessToast("Stake refunded", {
+            description: "Solo reserve was too low for this prize. Your stake is available in Vault.",
+            id: `solo-refunded:${roundId}`,
+          });
+        }
       } catch {}
       resultTimeoutRef.current = setTimeout(() => setPhase("result"), 600);
     }
@@ -688,9 +699,11 @@ export default function PlayClient({
       isPractice={isPractice}
       mode={mode}
       matchedPlayers={matchedPlayers}
+      soloRefunded={soloRefunded}
       onAgain={() => {
         isSubmittingRef.current = false;
         setMatchedPlayers([]);
+        setSoloRefunded(false);
         setPhase("select");
       }}
     />

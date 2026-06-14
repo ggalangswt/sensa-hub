@@ -18,6 +18,7 @@ export default function ResultScene({
   isPractice,
   mode,
   matchedPlayers,
+  soloRefunded,
   onAgain,
 }: {
   target: HSL;
@@ -28,6 +29,7 @@ export default function ResultScene({
   isPractice: boolean;
   mode: Mode;
   matchedPlayers: string[];
+  soloRefunded: boolean;
   onAgain: () => void;
 }) {
   const [displayAcc, setDisplayAcc] = useState(0);
@@ -87,10 +89,19 @@ export default function ResultScene({
           <div className="flex justify-end">
             {!isPractice && (
               <div className="text-right animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both bg-black/20 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl">
-                <p className="text-white/70 text-xs uppercase tracking-wider mb-1">Earned ({tier.name})</p>
-                <p className="text-white font-heading text-3xl">
-                  <span className="inline-flex items-center gap-2">+{tier.payout} <UsdcIcon size={18} /></span>
+                <p className="text-white/70 text-xs uppercase tracking-wider mb-1">
+                  {soloRefunded ? "Stake refunded" : `Earned (${tier.name})`}
                 </p>
+                <p className="text-white font-heading text-3xl">
+                  <span className="inline-flex items-center gap-2">
+                    +{soloRefunded ? 5 : tier.payout} <UsdcIcon size={18} />
+                  </span>
+                </p>
+                {soloRefunded && (
+                  <p className="mt-1 max-w-[220px] text-xs text-white/70">
+                    Prize pool was too low. Your entry stake is back in Vault.
+                  </p>
+                )}
               </div>
             )}
           </div>

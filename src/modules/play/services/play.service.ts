@@ -21,7 +21,13 @@ export async function submitGuess(payload: {
   playerAddress?: string;
   isPractice: boolean;
   timeSec?: number;
-}): Promise<{ resolved?: boolean; winner?: string; onChainError?: string }> {
+}): Promise<{
+  resolved?: boolean;
+  winner?: string;
+  onChainError?: string;
+  refunded?: boolean;
+  refundReason?: string;
+}> {
   const res = await fetch("/api/play/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

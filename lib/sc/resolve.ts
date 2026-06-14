@@ -63,6 +63,14 @@ export function toTierEnum(tierName: string): number {
   }
 }
 
+export async function getSoloReserveBalance(): Promise<bigint> {
+  return (await publicClient.readContract({
+    address: GAME_ADDRESS,
+    abi: gameAbi,
+    functionName: "soloReserveBalance",
+  })) as bigint;
+}
+
 export async function signAndResolve(
   roundId: string,
   winners: `0x${string}`[],
@@ -81,11 +89,7 @@ export async function signAndResolve(
   const totalRewards = rewards.reduce((sum, reward) => sum + reward, BigInt(0));
 
   if (drainSoloReserve && totalRewards > BigInt(0)) {
-    const reserveBalance = (await publicClient.readContract({
-      address: GAME_ADDRESS,
-      abi: gameAbi,
-      functionName: "soloReserveBalance",
-    })) as bigint;
+    const reserveBalance = await getSoloReserveBalance();
 
     if (totalRewards > reserveBalance) {
       throw new Error(

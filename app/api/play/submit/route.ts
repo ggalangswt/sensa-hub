@@ -7,7 +7,13 @@ import {
   normalizeHsl,
 } from "@/src/utils/color";
 import { redis, parseRedisJson } from "@/lib/db/redis";
-import { signAndResolve, toTierEnum, PlayerScore } from "@/lib/sc/resolve";
+import {
+  getSoloReserveBalance,
+  signAndResolve,
+  toTierEnum,
+  PlayerScore,
+} from "@/lib/sc/resolve";
+import { backendRefund } from "@/lib/sc/refund";
 import { supabaseAdmin } from "@/lib/db/supabase";
 
 function soloRewardAmount(tierName: string): {
@@ -203,6 +209,40 @@ export async function POST(req: Request) {
   if (mode === "solo") {
     try {
       const { reward, tierEnum } = soloRewardAmount(t.name);
+      const reserveBalance =
+        reward > BigInt(0) ? await getSoloReserveBalance() : BigInt(0);
+
+      if (reward > reserveBalance) {
+        const { txHash, refunded } = await backendRefund(roundId);
+        await persistResolvedRound({
+          gameRoundId: roundId,
+          mode,
+          source: "solo",
+          players: [
+            {
+              address: playerAddress.toLowerCase(),
+              accuracy: acc,
+              tier: t.name,
+              score: Math.round(acc * 100),
+              timeSec,
+              guess,
+            },
+          ],
+          winnerAddress: null,
+          rewardByAddress: {
+            [playerAddress.toLowerCase()]: 0,
+          },
+          resolved: false,
+        });
+        return NextResponse.json({
+          ...baseResult,
+          txHash,
+          refunded,
+          refundReason: "solo_reserve_insufficient",
+          reserveBalance: Number(reserveBalance) / 1_000_000,
+        });
+      }
+
       const { txHash, resolved } = await signAndResolve(
         roundId,
         [playerAddress as `0x${string}`],
