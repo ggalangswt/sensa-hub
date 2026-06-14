@@ -569,7 +569,8 @@ export default function PlayClient({
             description: "You are back at the mode selection screen.",
             id: `room-left:${code}`,
           });
-          initialRoomCode ? router.push("/play") : setPhase("select");
+          if (initialRoomCode) router.push("/play");
+          else setPhase("select");
         }}
         onCancel={async () => {
           const code = roomManager.room!.code;
@@ -579,7 +580,8 @@ export default function PlayClient({
             description: "The lobby has been closed.",
             id: `room-cancelled:${code}`,
           });
-          initialRoomCode ? router.push("/play") : setPhase("select");
+          if (initialRoomCode) router.push("/play");
+          else setPhase("select");
         }}
         onKick={async (targetAddress) => {
           const ok = await roomManager.kick(
@@ -649,7 +651,6 @@ export default function PlayClient({
       <WaitingScene
         myAccuracy={acc}
         myTier={t}
-        mode={mode}
         target={target}
         guess={guess}
       />
