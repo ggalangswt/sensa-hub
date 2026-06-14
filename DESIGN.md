@@ -1,139 +1,249 @@
-# Design
+---
+name: Sensa Hub
+description: Mobile-first Celo skill game hub with lime-on-deep-purple arcade UI and trustworthy stablecoin states.
+colors:
+  lime-yellow: "#FDFB51"
+  dark-purple: "#422057"
+  lime-wash: "#FFFEE8"
+  surface: "#FFFFFF"
+  deep-surface: "#261232"
+  soft-purple: "#7B4F96"
+  ink: "#1A0B22"
+  reverse-ink: "#FFFEE8"
+  overlay-purple: "#16071FCC"
+  success-green: "#00D696"
+  warning-amber: "#FACC00"
+  danger-red: "#FF4D50"
+  info-blue: "#0099FF"
+typography:
+  display:
+    fontFamily: "var(--font-heading)"
+    fontSize: "2rem"
+    fontWeight: 800
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "var(--font-heading)"
+    fontSize: "1.5rem"
+    fontWeight: 800
+    lineHeight: 1.1
+    letterSpacing: "-0.01em"
+  title:
+    fontFamily: "var(--font-heading)"
+    fontSize: "1.125rem"
+    fontWeight: 800
+    lineHeight: 1.2
+  body:
+    fontFamily: "var(--font-base)"
+    fontSize: "1rem"
+    fontWeight: 500
+    lineHeight: 1.5
+  label:
+    fontFamily: "var(--font-base)"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.25
+rounded:
+  base: "10px"
+  pill: "9999px"
+spacing:
+  shadow-x: "2px"
+  shadow-y: "2px"
+  button-x: "16px"
+  button-y: "8px"
+  card-x: "24px"
+  card-y: "24px"
+components:
+  button-primary:
+    backgroundColor: "{colors.lime-yellow}"
+    textColor: "{colors.dark-purple}"
+    rounded: "{rounded.base}"
+    padding: "{spacing.button-y} {spacing.button-x}"
+    height: "40px"
+  button-neutral:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.dark-purple}"
+    rounded: "{rounded.base}"
+    padding: "{spacing.button-y} {spacing.button-x}"
+    height: "40px"
+  card:
+    backgroundColor: "{colors.lime-wash}"
+    textColor: "{colors.dark-purple}"
+    rounded: "{rounded.base}"
+    padding: "{spacing.card-y} {spacing.card-x}"
+  input:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.dark-purple}"
+    rounded: "{rounded.base}"
+    padding: "8px 12px"
+    height: "40px"
+  badge-primary:
+    backgroundColor: "{colors.lime-yellow}"
+    textColor: "{colors.dark-purple}"
+    rounded: "{rounded.base}"
+    padding: "2px 10px"
+---
+
+# Design System: Sensa Hub
 
 ## Overview
 
-Sensa Hub is a Next.js App Router product UI for a mobile-first Celo skill game. It combines a playful neobrutalist visual shell with gameplay, room creation, wallet connection, vault, and profile flows.
+**Creative North Star: "Tactile Arcade Ledger"**
 
-The current identity uses lavender backgrounds, black outlines, hard shadows, bold headings, compact cards, and colorful chart accents. Future work should preserve the tactile game feel while reducing clutter, improving mobile rhythm, and making money states clearer.
+Sensa Hub is a product UI for a mobile-first Celo skill game. It should feel like a pocket arcade machine: direct, physical, playful, and fast. The same surface also carries stake, refund, result, vault, and withdraw states, so every money moment must feel calm and legible.
 
-## Color
+The system now uses a high-visibility Lime Yellow and Dark Purple pairing. Lime Yellow carries primary actions, selected states, and celebratory highlights. Dark Purple carries the app stage, borders, text, and trust-heavy wallet states. The combination should feel more distinctive and game-like than the previous lavender shell while keeping the same tactile neobrutalist structure.
 
-Current tokens:
+It explicitly rejects generic DeFi dashboards, casino UI, and generic SaaS polish. Sensa is a game-first product with Celo settlement in the background, not a wallet dashboard with a game attached.
 
-- Background: `oklch(93.88% 0.033 300.19)`
-- Dark background: `oklch(30.14% 0.0826 296.5)`
-- Surface: `oklch(100% 0 0)` in light mode, `oklch(23.93% 0 0)` in dark mode
-- Foreground: `oklch(0% 0 0)` in light mode, `oklch(92.49% 0 0)` in dark mode
-- Main accent: `oklch(70.28% 0.1753 295.36)`
-- Border and shadow ink: black
-- Accent roles: purple `#A985FF`, green `#00D696`, yellow `#FACC00`, red `#FF4D50`, blue `#0099FF`
+**Key Characteristics:**
 
-Direction:
+- Mobile-first, MiniPay-first, and thumb-friendly at 360px.
+- Lime Yellow primary actions against Dark Purple structural UI.
+- Tactile neobrutalist surfaces with dark purple borders and hard shadows.
+- One primary action per state, especially in room, stake, refund, result, vault, and withdraw flows.
+- Neutral active gameplay surfaces so surrounding UI color does not bias the player.
+- Trustworthy stablecoin copy that avoids blockchain jargon.
 
-- Preserve the bold lavender and black-outline identity for the app shell.
-- Use neutral monochrome overrides during active color gameplay to avoid biasing the player's eye.
-- Reserve green/yellow/red/blue for state and feedback, not decoration.
-- New authored color tokens should use OKLCH and maintain contrast for mobile readability.
+## Colors
+
+The palette is a committed lime-and-purple arcade system: Dark Purple gives the product weight and trust, Lime Yellow creates the fast game-console signal, and neutral surfaces keep forms and money states readable.
+
+### Primary
+
+- **Lime Yellow** (`lime-yellow`): the primary action, selected state, active control, and positive game highlight. It should feel bright, decisive, and rare enough to matter.
+- **Dark Purple** (`dark-purple`): the app stage, structural border, shadow color, primary text, and wallet-state anchor. It replaces black as the default brand ink when contrast permits.
+
+### Secondary
+
+- **Success Green** (`success-green`): successful deposits, resolved wins, healthy connection, and completed withdraw states.
+- **Warning Amber** (`warning-amber`): pending, attention, countdown, and recoverable waiting states.
+- **Danger Red** (`danger-red`): failed transaction, rejected action, expired room, and destructive confirmation states.
+- **Info Blue** (`info-blue`): neutral system information, room codes, helper notes, and non-critical status.
+
+### Neutral
+
+- **Lime Wash** (`lime-wash`): broad light-mode background and soft app shell.
+- **Surface** (`surface`): cards, inputs, dialogs, bottom navigation, and transaction panels.
+- **Deep Surface** (`deep-surface`): dark-mode panels and cards inside the Dark Purple shell.
+- **Soft Purple** (`soft-purple`): muted helper text, inactive icons, and secondary labels when full Dark Purple is too heavy.
+- **Ink** (`ink`): deepest text fallback for dense content that needs maximum readability.
+- **Reverse Ink** (`reverse-ink`): text on Dark Purple surfaces.
+- **Overlay Purple** (`overlay-purple`): modal scrims and blocking overlays.
+
+### Named Rules
+
+**The Lime Means Action Rule.** Lime Yellow is for the next action, selected state, and important game feedback. Do not use it as a background wash across whole screens.
+
+**The Purple Carries Trust Rule.** Dark Purple should hold structure: borders, stage areas, nav, wallet states, and serious copy. It keeps the game from feeling like a toy when money is involved.
+
+**The Game Neutrality Rule.** During active color gameplay, the app must switch to monochrome surfaces. Lime, purple, green, amber, red, and blue must not surround the player's color judgment area.
+
+**The State Color Rule.** Green, amber, red, and blue are semantic. If a color does not explain state or feedback, remove it.
 
 ## Typography
 
-Current type:
+**Display Font:** project heading font via `font-heading`.
+**Body Font:** project base font via `font-base`.
+**Label/Mono Font:** no separate mono role; labels use the base font.
 
-- Tailwind theme uses `font-base` and `font-heading` utilities.
-- Headings are bold and high-contrast.
-- UI labels are compact, often badge-like.
+**Character:** Typography is punchy and compact. Headings can feel arcade-like and bold, but labels, values, and wallet states must stay plain enough to be trusted.
 
-Direction:
+### Hierarchy
 
-- Keep headings punchy, but avoid turning every label into a badge.
-- Use short, direct product copy.
-- Cap explanatory text around 65 to 75 characters per line.
-- Use `text-wrap: balance` for major headings when adding new surfaces.
+- **Display** (800, 2rem, 1.05 line-height): page titles, hero statements, and major game state announcements.
+- **Headline** (800, 1.5rem, 1.1 line-height): modal titles, result titles, section headers, and lobby state headers.
+- **Title** (800, 1.125rem, 1.2 line-height): card titles, room names, vault rows, and player result names.
+- **Body** (500, 1rem, 1.5 line-height): instructions, state explanations, support copy, and stablecoin messaging.
+- **Label** (500, 0.875rem, 1.25 line-height): button text, badges, form labels, status pills, and compact metadata.
 
-## Layout
+### Named Rules
 
-Current structure:
+**The Short Copy Rule.** Product copy must be short, direct, and task-focused. Long prose belongs only in support, terms, privacy, and onboarding explanations.
 
-- Landing page with centered hero and floating color swatches.
-- Authenticated app shell with `Navbar`, centered max-width content, and bottom navigation.
-- Play flow uses screen components: select, staking, queueing, lobby, preview, guess, waiting, leaderboard, result.
-- Cards and modals are common for mode selection, room setup, payout details, and actions.
+**The No Badge Soup Rule.** Labels can be badge-like, but every line of UI must not become a badge. Use badges for mode, state, price, online count, and room identity only.
 
-Direction:
+## Elevation
 
-- Prioritize 360px mobile layouts and MiniPay in-app browser constraints.
-- Keep one primary action per state.
-- Avoid nested card stacks where inline progressive disclosure would be clearer.
-- Use spacing rhythm to distinguish gameplay, wallet actions, and informational copy.
+Sensa uses structural hard shadow, not ambient softness. Depth is created by dark purple borders, a 2px offset shadow, and press-state translation. The shadow is part of the product's tactile arcade grammar, so it should be crisp and consistent rather than blurred or decorative.
 
-## Components And Patterns
+### Shadow Vocabulary
 
-Existing patterns:
+- **Structural Shadow** (`2px 2px 0px 0px var(--border)`): default card, button, modal, toast, and game-control shadow.
+- **Pressed State** (`translate(2px, 2px)` with shadow removed): hover or active feedback for tactile controls.
+- **Reverse Press State** (`translate(-2px, -2px)` with structural shadow): occasional reverse control treatment where the existing button variant calls for it.
+- **Overlay Layer** (`#16071FCC`): modal and blocking state scrim.
 
-- Neobrutalist cards with `border-2`, `shadow-shadow`, and `rounded-base`.
-- Buttons from `components/ui/button.tsx` with default and neutral variants.
-- Badges for mode, price, status, and online count.
-- Radix/shadcn-style form controls.
-- Toasts via Sonner.
-- Wallet context, profile, vault, and room APIs.
+### Named Rules
 
-Direction:
+**The Structural Shadow Rule.** If a surface has a 2px dark purple border, its shadow must be hard and aligned to the token. Do not add soft 16px+ blur shadows to the same element.
 
-- Cards are acceptable for distinct game modes, but avoid using them as the default answer for every state.
-- Money actions should use consistent copy and clear outcome states.
-- Modals should be used carefully; for mobile, prefer simple step views when a task has multiple decisions.
-- Toasts should supplement, not replace, visible state changes.
+**The Modal Restraint Rule.** Modals are for blocking decisions only. Multi-step room or wallet tasks should prefer step views when inline progression is clearer on mobile.
 
-## Motion
+## Components
 
-Current motion:
+### Buttons
 
-- Page enter fade-up.
-- Floating color swatches.
-- Marquee.
-- Pulse indicators.
-- Heavy lobby match animations with bounce-like cubic-bezier curves.
-- Confetti/result effects.
+- **Shape:** compact rounded rectangle (10px radius) with 2px dark purple border.
+- **Primary:** Lime Yellow background, Dark Purple text, 40px default height, 16px horizontal padding.
+- **Hover / Focus:** translate by the shadow offset and remove the shadow on hover; use a visible 2px focus ring with offset.
+- **Neutral:** white or Lime Wash background with Dark Purple text and the same border/shadow structure.
+- **Disabled / Loading:** keep shape and layout stable, reduce opacity, and avoid changing the primary action position.
 
-Direction:
+### Chips
 
-- Motion should make matchmaking, staking, and results feel alive.
-- Avoid bounce/elastic motion in new work; use decisive ease-out curves.
-- Add reduced-motion alternatives for major transitions and result effects.
-- Do not hide important state behind animation completion.
+- **Style:** 2px dark purple border, 10px radius, compact 12px text, and 10px horizontal padding.
+- **Primary chip:** Lime Yellow background for selected mode or active state.
+- **Neutral chip:** surface background for metadata such as room size, status, or online count.
 
-## MiniPay And Wallet UX
+### Cards / Containers
 
-Preferred copy:
+- **Corner Style:** tactile rounded rectangle (10px radius).
+- **Background:** Lime Wash for broad panels, surface for inputs and high-contrast task areas, Dark Purple for high-emphasis wallet or result states.
+- **Shadow Strategy:** structural hard shadow only.
+- **Border:** 2px Dark Purple border on interactive or grouped surfaces.
+- **Internal Padding:** 24px default card padding; reduce only when mobile density requires it.
 
-- Stablecoin
-- Deposit
-- Withdraw
-- Network fee
+### Inputs / Fields
 
-Avoid:
+- **Style:** 40px height, 10px radius, 2px Dark Purple border, surface background, 12px horizontal padding.
+- **Focus:** visible Dark Purple focus ring with 2px offset.
+- **Placeholder:** must stay readable; do not use low-contrast gray on Lime Wash.
+- **Error / Disabled:** error uses Danger Red with visible text; disabled preserves layout and reduces opacity.
 
-- Gas or gas fee
-- Crypto
-- Onramp
-- Offramp
+### Navigation
 
-Wallet UX should auto-connect in MiniPay where possible, avoid message-sign auth, and avoid presenting raw addresses as the main identity. Low-balance and failed transaction states should point to the next recovery action.
+- **Style:** simple app shell with clear current location, bottom navigation on mobile, and no raw wallet address as primary identity.
+- **Active State:** use Lime Yellow only for the current location or primary affordance. Inactive items should stay muted purple, not pale gray.
+- **MiniPay Behavior:** inside MiniPay, avoid redundant wallet prompts; the app should feel already connected when auto-connect succeeds.
 
-## Technical Notes
+### Gameplay Surfaces
 
-Framework:
+- **Active Game:** monochrome shell, hidden nav, neutral controls, and no surrounding hue bias.
+- **Room Flow:** room creation, staking, ready, waiting, result, refund, and withdraw screens must each have one obvious Lime Yellow primary action.
+- **Vault Flow:** stablecoin balances, pending winnings, refunds, and withdraw actions must use clear state copy before decorative game copy.
 
-- Next.js 16 App Router
-- React 19
-- Tailwind CSS 4
-- Wagmi and Viem
-- Supabase
-- Upstash Redis
-- Celo Mainnet/Sepolia contract wiring
+## Do's and Don'ts
 
-Important files:
+### Do:
 
-- `app/globals.css`: theme tokens and global animation styles
-- `app/layout.tsx`: root providers and metadata
-- `src/modules/play/Play.tsx`: main gameplay state machine
-- `src/modules/play/components/SelectScene.tsx`: mode selection and room creation
-- `src/provider/WalletContext.tsx`: wallet connection and profile identity
-- `lib/sc/contracts.ts`: contract and token addresses
+- **Do** design for 360px mobile first, then expand to wider screens.
+- **Do** use Lime Yellow (`#FDFB51`) and Dark Purple (`#422057`) as the main Sensa combination.
+- **Do** keep Dark Purple as the structural border, stage, and trust color.
+- **Do** keep Lime Yellow reserved for primary actions, selected states, and meaningful game feedback.
+- **Do** keep primary actions visually singular on each state screen.
+- **Do** use MiniPay-safe language: Stablecoin, Deposit, Withdraw, Network fee.
+- **Do** keep money states calm, explicit, and recoverable.
+- **Do** use neutral monochrome surfaces during active color gameplay.
+- **Do** replace legacy brand references with Sensa and Celo.
 
-Known design risks:
+### Don't:
 
-- The app leans heavily on card/modal patterns.
-- Some copy still reflects early color-game placeholder positioning and may need tightening for MiniPay launch.
-- Active gameplay correctly removes theme color bias, but surrounding app states still need stronger hierarchy.
-- Existing motion includes bounce-like easing that should be replaced in future polish passes.
+- **Don't** use generic DeFi dashboard patterns: token tables, yield language, protocol jargon, or wallet-first framing.
+- **Don't** use casino UI: flashing rewards, fake jackpot hype, manipulative urgency, or cluttered badges.
+- **Don't** use generic SaaS polish; the lime-and-purple pairing must serve action, trust, and game structure.
+- **Don't** flood whole screens with Lime Yellow. If everything is highlighted, nothing is actionable.
+- **Don't** use Gas, crypto, onramp, or offramp in user-facing copy.
+- **Don't** present a raw wallet address as the primary user identity.
+- **Don't** leave legacy source brand or network references in user-facing UI, metadata, placeholder content, or docs.
+- **Don't** combine the Sensa 2px border language with soft decorative glassmorphism or wide ghost-card shadows.
