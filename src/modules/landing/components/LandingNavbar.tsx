@@ -3,6 +3,7 @@
 import { Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/src/provider/WalletContext";
+import { SensaLogo } from "@/src/components/brand/SensaLogo";
 
 export default function LandingNavbar({ onPlay }: { onPlay: () => void }) {
   const { isConnected } = useWallet();
@@ -12,9 +13,7 @@ export default function LandingNavbar({ onPlay }: { onPlay: () => void }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-base bg-main border-2 border-border shadow-shadow flex items-center justify-center">
-              <span className="text-main-foreground font-heading text-sm">N</span>
-            </div>
+            <SensaLogo />
             <span className="font-heading text-xl text-foreground">Sensa</span>
           </div>
           <div className="flex items-center gap-2">
