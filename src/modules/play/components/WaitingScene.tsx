@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { hslCss } from "@/src/utils/color";
 import type { HSL } from "@/src/utils/color";
-import type { Mode } from "../types/play.types";
 
 function tierBgClass(name: string): string {
   switch (name) {
@@ -20,13 +19,11 @@ function tierBgClass(name: string): string {
 export default function WaitingScene({
   myAccuracy,
   myTier,
-  mode,
   target,
   guess,
 }: {
   myAccuracy: number;
   myTier: { name: string; payout: number; color: string };
-  mode: Mode;
   target: HSL;
   guess: HSL;
 }) {
@@ -95,7 +92,7 @@ export default function WaitingScene({
                 ))}
               </div>
               <p className="text-white/80 text-xs font-heading uppercase tracking-wider">
-                Waiting for others
+                Resolving result
               </p>
             </div>
           </div>
@@ -108,6 +105,9 @@ export default function WaitingScene({
           </div>
         </div>
       </div>
+      <p className="mt-4 text-center text-sm font-heading text-foreground/70">
+        Your guess is submitted. Waiting for other players and final settlement.
+      </p>
     </div>
   );
 }
