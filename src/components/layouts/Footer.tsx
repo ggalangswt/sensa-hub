@@ -1,12 +1,12 @@
+import { SensaLogo } from "@/src/components/brand/SensaLogo";
+
 export default function Footer() {
   return (
     <>
       <footer className="border-t-2 border-border bg-secondary-background py-8 px-4">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-base bg-main border-2 border-border flex items-center justify-center">
-              <span className="text-main-foreground font-heading text-xs">N</span>
-            </div>
+            <SensaLogo size="sm" />
             <span className="font-heading text-foreground">Sensa</span>
           </div>
           <p className="text-sm text-foreground/50">Brain skill game hub on Celo. Built for MiniPay play.</p>
