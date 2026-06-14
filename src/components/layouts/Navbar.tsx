@@ -42,7 +42,7 @@ export default function Navbar() {
                         href={link.href}
                         className={`text-sm font-heading transition-colors no-underline ${
                           isActive
-                            ? "text-foreground"
+                            ? "text-foreground underline decoration-main decoration-4 underline-offset-4"
                             : "text-foreground/60 hover:text-foreground"
                         }`}
                       >
@@ -70,13 +70,21 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex flex-col items-center justify-center w-full h-full no-underline transition-colors ${
+                className={`flex flex-col items-center justify-center w-full h-full no-underline transition-colors ${
                     isActive
                       ? "text-foreground"
                       : "text-foreground/40 hover:text-foreground/60"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 mb-1 ${isActive ? "text-main" : ""}`} />
+                  <span
+                    className={`mb-1 rounded-base border-2 px-2 py-1 ${
+                      isActive
+                        ? "border-border bg-main shadow-shadow"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </span>
                   <span className="text-[10px] font-heading">{link.label}</span>
                 </Link>
               );
