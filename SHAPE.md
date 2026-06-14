@@ -2,7 +2,7 @@
 
 ## Summary
 
-Redesign Sensa Hub as a production-ready, MiniPay-first mobile product UI across all user-facing routes. Use PRODUCT.md and DESIGN.md as source of truth: preserve the playful neobrutalist lavender shell, black outlines, hard shadows, compact game feel, and tactile controls while making every route clearer at 360px width. Keep existing behavior, APIs, wallet logic, staking, rooms, contract calls, and Supabase/Redis flows intact.
+Redesign Sensa Hub as a production-ready, MiniPay-first mobile product UI across all user-facing routes. Use PRODUCT.md and DESIGN.md as source of truth for behavior and product constraints, but reject the legacy hard-outline, hard-shadow direction. The target visual system is a Modern Retro Handheld Console: compact screen panels, cartridge-like cards, status LEDs, physical buttons, and soft device depth. Keep existing behavior, APIs, wallet logic, staking, rooms, contract calls, and Supabase/Redis flows intact.
 
 Primary implementation order: /play and lobby flows first, then money/profile routes, then full landing redesign.
 
