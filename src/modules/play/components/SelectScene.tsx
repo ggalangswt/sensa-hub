@@ -31,6 +31,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsdcIcon from "@/src/components/elements/UsdcIcon";
 import { formatCompactUsdc } from "@/src/utils/utils";
 import type { Mode, TabKey } from "../types/play.types";
+import { STAKE_PRESETS } from "../types/play.types";
 import type { TargetDifficulty } from "@/src/utils/color";
 
 export default function SelectScene({
@@ -60,7 +61,7 @@ export default function SelectScene({
   const [roomName, setRoomName] = useState("");
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [isPaid, setIsPaid] = useState(false);
-  const [stakeAmount, setStakeAmount] = useState(5);
+  const [stakeAmount, setStakeAmount] = useState(1);
   const [joinCode, setJoinCode] = useState("");
 
   const resetFriendModal = () => {
@@ -68,7 +69,7 @@ export default function SelectScene({
     setRoomName("");
     setMaxPlayers(2);
     setIsPaid(false);
-    setStakeAmount(5);
+    setStakeAmount(1);
     setJoinCode("");
   };
 
@@ -302,7 +303,7 @@ export default function SelectScene({
                       <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
                         <Label className="text-xs font-heading uppercase tracking-wider text-foreground/60">Stake Amount</Label>
                         <div className="flex gap-2">
-                          {[5, 10, 15, 20].map((amt) => (
+                          {STAKE_PRESETS.map((amt) => (
                             <button key={amt} disabled={!!roomLoading} onClick={() => setStakeAmount(amt)}
                               className={`flex-1 py-2.5 rounded-base border-2 font-heading text-sm transition-all cursor-pointer ${stakeAmount === amt ? "border-chart-2 bg-chart-2/10 text-chart-2" : "border-border bg-secondary-background text-foreground/60 hover:border-chart-2/50"}`}
                             >{amt}</button>
