@@ -77,6 +77,7 @@ export const DIFFICULTY_LABEL: Record<TargetDifficulty, string> = {
 
 export const USDC_DECIMALS = BigInt(1_000_000);
 export const ONE_BILLION_USDC = BigInt(1_000_000_000) * USDC_DECIMALS;
+export const STAKE_PRESETS = [1, 5, 10, 15, 20] as const;
 
 export const STAKE_AMOUNT: Record<Mode, bigint> = {
   solo: BigInt(5) * USDC_DECIMALS,
