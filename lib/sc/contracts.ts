@@ -1,10 +1,16 @@
 import gameAbi from "../abi/SensaSoundGameUpgradeable.json";
 
+const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID || "11142220");
+const defaultUsdcAddress =
+  chainId === 42220
+    ? "0xcebA9300f2b948710d2653dD7B07f33A8B32118C"
+    : "0x01C5C0122039549AD1493B8220cABEdD739BC44E";
+
 export const GAME_ADDRESS = (process.env.NEXT_PUBLIC_GAME_ADDRESS ||
   "0xB33e13bd00d562Ea9dBffAC0b84540742670AC00") as `0x${string}`;
 
 export const USDC_ADDRESS = (process.env.NEXT_PUBLIC_USDC_ADDRESS ||
-  "0x01C5C0122039549AD1493B8220cABEdD739BC44E") as `0x${string}`;
+  defaultUsdcAddress) as `0x${string}`;
 
 export const usdcAbi = [
   {
