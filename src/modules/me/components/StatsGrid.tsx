@@ -25,7 +25,7 @@ export default function StatsGrid({ profile }: { profile: ProfileData }) {
       </Card>
       <Card className="bg-chart-5/20">
         <CardContent className="pt-6">
-          <p className="text-xs font-heading text-foreground/60">BEST ACC</p>
+          <p className="text-xs font-heading text-foreground/60">BEST SCORE</p>
           <p className="text-2xl font-heading text-foreground">
             {profile.best_accuracy > 0 ? `${profile.best_accuracy.toFixed(1)}%` : "-"}
           </p>
