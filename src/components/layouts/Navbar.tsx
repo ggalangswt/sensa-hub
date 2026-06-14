@@ -7,6 +7,7 @@ import { useWallet } from "@/src/provider/WalletContext";
 import { useTheme } from "@/src/provider/ThemeProvider";
 import { Gamepad2, Vault, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SensaLogo } from "@/src/components/brand/SensaLogo";
 
 const NAV_LINKS = [
   { href: "/play", label: "Play", icon: Gamepad2 },
@@ -25,9 +26,7 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 md:h-16">
             <Link href="/" className="flex items-center gap-2 no-underline">
-              <div className="w-8 h-8 rounded-base bg-main border-2 border-border shadow-shadow flex items-center justify-center">
-                <span className="text-main-foreground font-heading text-sm">N</span>
-              </div>
+              <SensaLogo />
               <span className="font-heading text-xl text-foreground">Sensa</span>
             </Link>
 
