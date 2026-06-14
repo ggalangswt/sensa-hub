@@ -10,10 +10,10 @@ import {
   modeForPlayerCount,
   sanitizeRoomName,
   unbindPlayer,
+  isAllowedStake,
 } from "@/lib/rooms";
 import { supabaseAdmin } from "@/lib/db/supabase";
 
-const ALLOWED_STAKES = [5, 10, 15, 20];
 const ALLOWED_DIFFICULTIES = ["easy", "medium", "hard", "god"];
 
 export async function POST(req: Request) {
@@ -36,9 +36,9 @@ export async function POST(req: Request) {
       );
     }
     const stake = Number(stakeAmount ?? 0);
-    if (paid && !ALLOWED_STAKES.includes(stake)) {
+    if (paid && !isAllowedStake(stake)) {
       return NextResponse.json(
-        { error: "stakeAmount must be 5, 10, 15, or 20" },
+        { error: "stakeAmount must be 1, 5, 10, 15, or 20" },
         { status: 400 },
       );
     }
