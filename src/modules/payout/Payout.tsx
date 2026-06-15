@@ -74,7 +74,7 @@ export default function Payout() {
       )}
 
       <div className="mt-4 grid grid-cols-1 gap-4">
-        <Card className="bg-main">
+        <Card className="bg-main shadow-[0_12px_26px_rgb(66_32_87_/_0.16)]">
           <CardContent className="pt-3">
             <p className="text-xs font-heading text-foreground/60">
               WALLET BALANCE
