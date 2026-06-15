@@ -17,9 +17,9 @@ export default function ProfileCard({
   onDisconnect: () => void;
 }) {
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-[var(--console-screen)]">
       <CardContent className="pt-6 flex items-center gap-4">
-        <div className="w-14 h-14 rounded-base bg-main border-2 border-border shadow-shadow flex items-center justify-center text-main-foreground font-heading text-sm shrink-0">
+        <div className="w-14 h-14 rounded-[18px] bg-main border border-border/25 shadow-[inset_0_-3px_0_rgb(66_32_87_/_0.16),0_8px_18px_rgb(66_32_87_/_0.12)] flex items-center justify-center text-main-foreground font-heading text-sm shrink-0">
           {address.slice(2, 4).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">

@@ -10,11 +10,12 @@ export default function HeroSection({ onPlay }: { onPlay: () => void }) {
 
   return (
     <section className="landing-hero px-4 py-10 sm:py-16">
-      <div className="relative z-10 text-center max-w-3xl mx-auto">
+      <div className="relative z-10 mx-auto max-w-3xl rounded-[28px] border border-border/20 bg-[var(--console-shell)] p-3 text-center shadow-[0_20px_48px_rgb(66_32_87_/_0.22)] sm:p-5">
+        <div className="rounded-[22px] border border-white/10 bg-[var(--console-screen)] px-4 py-8 shadow-[inset_0_0_0_1px_rgb(66_32_87_/_0.08)] sm:px-8 sm:py-12">
         <Badge className="mb-5 text-sm sm:mb-6">Brain skill games on Celo</Badge>
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading leading-tight mb-5 sm:mb-6 text-foreground">
           Train Fast.<br />
-          <span className="inline-flex items-center gap-3 text-foreground underline decoration-main decoration-[10px] underline-offset-[-4px]">
+          <span className="inline-flex items-center gap-3 text-foreground">
             Play sharper.
           </span>
         </h1>
@@ -41,6 +42,7 @@ export default function HeroSection({ onPlay }: { onPlay: () => void }) {
           <span className="flex items-center gap-1"><Layers3 className="w-4 h-4" /> Patterns</span>
           <span>·</span>
           <span className="flex items-center gap-1"><Vault className="w-4 h-4" /> Vault Withdraw</span>
+        </div>
         </div>
       </div>
     </section>

@@ -24,17 +24,17 @@ function StepItem({
 }) {
   return (
     <div
-      className={`flex items-center gap-4 rounded-base border-2 p-4 transition-all ${
+      className={`flex items-center gap-4 rounded-[18px] border p-4 transition-all ${
         state === "done"
-          ? "border-border bg-chart-2/15"
+          ? "border-chart-2/35 bg-chart-2/12"
           : state === "active"
-            ? "border-border bg-main shadow-shadow"
-            : "border-border bg-secondary-background opacity-55"
+            ? "border-main/60 bg-main shadow-shadow"
+            : "border-border/20 bg-secondary-background opacity-60"
       }`}
     >
       <div
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border font-heading ${
-          state === "active" ? "bg-foreground text-background" : "bg-secondary-background"
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-heading ${
+          state === "active" ? "border-foreground bg-foreground text-background" : "border-border/25 bg-secondary-background"
         }`}
       >
         {state === "done" ? (

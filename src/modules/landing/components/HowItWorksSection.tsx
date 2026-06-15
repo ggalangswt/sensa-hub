@@ -13,7 +13,7 @@ export default function HowItWorksSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="text-center">
             <CardHeader>
-              <div className="mx-auto w-16 h-16 rounded-base bg-main border-2 border-border shadow-shadow flex items-center justify-center mb-2">
+              <div className="mx-auto w-16 h-16 rounded-[18px] bg-main border border-border/25 shadow-shadow flex items-center justify-center mb-2">
                 <Brain className="w-8 h-8 text-main-foreground" />
               </div>
               <CardTitle className="text-xl">1. Focus</CardTitle>
@@ -22,7 +22,7 @@ export default function HowItWorksSection() {
           </Card>
           <Card className="text-center">
             <CardHeader>
-              <div className="mx-auto w-16 h-16 rounded-base bg-chart-3 border-2 border-border shadow-shadow flex items-center justify-center mb-2">
+              <div className="mx-auto w-16 h-16 rounded-[18px] bg-chart-3 border border-border/25 shadow-shadow flex items-center justify-center mb-2">
                 <Gamepad2 className="w-8 h-8 text-main-foreground" />
               </div>
               <CardTitle className="text-xl">2. Play</CardTitle>
@@ -31,7 +31,7 @@ export default function HowItWorksSection() {
           </Card>
           <Card className="text-center">
             <CardHeader>
-              <div className="mx-auto w-16 h-16 rounded-base bg-chart-2 border-2 border-border shadow-shadow flex items-center justify-center mb-2">
+              <div className="mx-auto w-16 h-16 rounded-[18px] bg-chart-2 border border-border/25 shadow-shadow flex items-center justify-center mb-2">
                 <Trophy className="w-8 h-8 text-main-foreground" />
               </div>
               <CardTitle className="text-xl">3. Resolve</CardTitle>

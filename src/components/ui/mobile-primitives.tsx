@@ -18,7 +18,7 @@ export function RouteHeader({
   return (
     <header className={cn("mb-4 flex items-start justify-between gap-3 sm:mb-5 sm:gap-4", className)}>
       <div className="min-w-0">
-        {eyebrow && <div className="mb-2">{eyebrow}</div>}
+        {eyebrow && <div className="mb-2 flex items-center gap-2">{eyebrow}</div>}
         <h1 className="text-2xl font-heading leading-tight text-foreground text-balance sm:text-3xl">
           {title}
         </h1>
@@ -45,26 +45,29 @@ export function TrustStatusStrip({
   className?: string;
 }) {
   const toneClass = {
-    info: "bg-chart-5/12",
-    success: "bg-chart-2/15",
-    warning: "bg-chart-3/25",
-    danger: "bg-chart-4/12",
-    dark: "bg-foreground text-background",
+    info: "bg-chart-5/10",
+    success: "bg-chart-2/12",
+    warning: "bg-chart-3/20",
+    danger: "bg-chart-4/10",
+    dark: "bg-foreground text-background border-foreground",
   }[tone];
   const Icon = tone === "success" ? CheckCircle2 : AlertCircle;
 
   return (
     <div
       className={cn(
-        "rounded-base border-2 border-border p-3 shadow-shadow sm:p-4",
+        "rounded-base border border-border/20 p-3 shadow-shadow sm:p-4",
         toneClass,
         className,
       )}
     >
       <div className="flex items-start gap-3">
-        <Icon className="mt-0.5 h-4 w-4 shrink-0" />
+        <span className="mt-1 flex h-2.5 w-2.5 shrink-0 rounded-full bg-current opacity-80" aria-hidden="true" />
         <div className="min-w-0">
-          <p className="font-heading text-sm leading-tight">{title}</p>
+          <p className="flex items-center gap-2 font-heading text-sm leading-tight">
+            <Icon className="h-3.5 w-3.5" />
+            {title}
+          </p>
           {children && <div className="mt-1 text-xs leading-normal opacity-75 sm:leading-relaxed">{children}</div>}
         </div>
       </div>
@@ -107,7 +110,7 @@ export function MoneyStateBlock({
   return (
     <section
       className={cn(
-        "rounded-base border-2 border-border bg-foreground p-4 text-background shadow-shadow sm:p-5",
+        "rounded-[20px] border border-border/20 bg-foreground p-4 text-background shadow-shadow sm:p-5",
         className,
       )}
     >

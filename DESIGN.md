@@ -92,7 +92,7 @@ components:
 
 Sensa Hub is a product UI for a mobile-first Celo skill game. It should feel like a pocket arcade machine: direct, physical, playful, and fast. The same surface also carries stake, refund, result, vault, and withdraw states, so every money moment must feel calm and legible.
 
-The system now uses a high-visibility Lime Yellow and Dark Purple pairing. Lime Yellow carries primary actions, selected states, and celebratory highlights. Dark Purple carries the app stage, borders, text, and trust-heavy wallet states. The combination should feel more distinctive and game-like than the previous lavender shell while keeping the same tactile neobrutalist structure.
+The system now uses a high-visibility Lime Yellow and Dark Purple pairing. Lime Yellow carries primary actions, selected states, and celebratory highlights. Dark Purple carries the app stage, screen chrome, text, and trust-heavy wallet states. The combination should feel like a compact retro handheld console: modern, readable, game-first, and calm around money states.
 
 It explicitly rejects generic DeFi dashboards, casino UI, and generic SaaS polish. Sensa is a game-first product with Celo settlement in the background, not a wallet dashboard with a game attached.
 
@@ -100,7 +100,7 @@ It explicitly rejects generic DeFi dashboards, casino UI, and generic SaaS polis
 
 - Mobile-first, MiniPay-first, and thumb-friendly at 360px.
 - Lime Yellow primary actions against Dark Purple structural UI.
-- Tactile neobrutalist surfaces with dark purple borders and hard shadows.
+- Modern retro handheld surfaces with compact screen panels, cartridge-like cards, soft depth, and physical button states.
 - One primary action per state, especially in room, stake, refund, result, vault, and withdraw flows.
 - Neutral active gameplay surfaces so surrounding UI color does not bias the player.
 - Trustworthy stablecoin copy that avoids blockchain jargon.

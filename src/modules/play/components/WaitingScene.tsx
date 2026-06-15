@@ -45,7 +45,7 @@ export default function WaitingScene({
     <div className="game-zone max-w-3xl mx-auto page-enter">
       {/* Colour split-screen — same structure as ResultScene */}
       <div
-        className="relative w-full rounded-2xl overflow-hidden border-2 border-border shadow-shadow flex flex-col"
+        className="relative w-full rounded-[24px] overflow-hidden border border-border/20 shadow-shadow flex flex-col"
         style={{ minHeight: "min(65vh,550px)" }}
       >
         {/* Top half — player's guess */}

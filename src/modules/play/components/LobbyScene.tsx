@@ -105,7 +105,7 @@ export default function LobbyScene({
         }
       />
 
-      <div className="mb-4 rounded-base border-2 border-border bg-foreground p-4 text-background shadow-shadow">
+      <div className="mb-4 rounded-[22px] border border-border/20 bg-[var(--console-shell)] p-4 text-background shadow-shadow">
         <div className="flex items-center justify-between">
           <div>
             <p className="mb-0.5 text-xs uppercase tracking-wider opacity-65">Room code</p>
@@ -133,18 +133,18 @@ export default function LobbyScene({
               return (
                 <div
                   key={player.address}
-                  className={`flex items-center justify-between p-3 rounded-base border-2 transition-all ${
+                  className={`flex items-center justify-between p-3 rounded-[16px] border transition-all ${
                     player.status === "ready"
-                      ? "border-border bg-chart-2/10"
-                      : "border-border bg-secondary-background"
+                      ? "border-chart-2/35 bg-chart-2/10"
+                      : "border-border/20 bg-secondary-background"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                      className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ${
                         player.status === "ready"
-                          ? "bg-chart-2/20 border-border text-foreground"
-                          : "bg-secondary-background border-border text-foreground/30"
+                          ? "bg-chart-2/20 border-chart-2/45 text-foreground"
+                          : "bg-secondary-background border-border/25 text-foreground/30"
                       }`}
                     >
                       {player.status === "ready" ? (
@@ -183,7 +183,7 @@ export default function LobbyScene({
                   {amLeader && !isSelf && (
                     <button
                       onClick={() => onKick(player.address)}
-                      className="flex h-11 w-11 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-border bg-secondary-background text-foreground/40 transition-all hover:border-chart-4 hover:bg-chart-4/10 hover:text-chart-4"
+                      className="flex h-11 w-11 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-border/25 bg-secondary-background text-foreground/40 transition-all hover:border-chart-4 hover:bg-chart-4/10 hover:text-chart-4"
                       aria-label="Remove player"
                     >
                       <X className="w-4 h-4" />
@@ -195,9 +195,9 @@ export default function LobbyScene({
             {Array.from({ length: room.maxPlayers - room.players.length }).map((_, i) => (
               <div
                 key={`empty-${i}`}
-                className="flex items-center gap-3 p-3 rounded-base border-2 border-dashed border-border/50 bg-secondary-background/50"
+                className="flex items-center gap-3 p-3 rounded-[16px] border border-dashed border-border/35 bg-secondary-background/50"
               >
-                <div className="w-8 h-8 rounded-full border-2 border-border/40 bg-secondary-background flex items-center justify-center text-foreground/20">
+                <div className="w-8 h-8 rounded-full border border-border/30 bg-secondary-background flex items-center justify-center text-foreground/20">
                   <span className="text-xs">?</span>
                 </div>
                 <span className="text-sm text-foreground/35 font-heading">Open seat</span>

@@ -4,15 +4,20 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #FFFEE8;
-  --secondary-background: #FFFFFF;
+  --background: #F6F4DF;
+  --secondary-background: #FFFDF1;
   --foreground: #422057;
   --main-foreground: #422057;
   --main: #FDFB51;
-  --border: #422057;
+  --border: #6B4A78;
   --ring: #422057;
   --overlay: #16071FCC;
-  --shadow: 2px 2px 0px 0px var(--border);
+  --shadow: 0 10px 22px rgb(66 32 87 / 0.14), inset 0 1px 0 rgb(255 255 255 / 0.68);
+  --console-shell: #422057;
+  --console-screen: #FFFDF1;
+  --console-recess: #261232;
+  --console-line: #D8CFE0;
+  --console-muted: #7B4F96;
   --chart-1: #FDFB51;
   --chart-2: #00D696;
   --chart-3: #FACC00;
@@ -27,9 +32,14 @@
   --foreground: #FFFEE8;
   --main-foreground: #422057;
   --main: #FDFB51;
-  --border: #FDFB51;
+  --border: #8D75A0;
   --ring: #FDFB51;
-  --shadow: 2px 2px 0px 0px var(--border);
+  --shadow: 0 12px 28px rgb(0 0 0 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  --console-shell: #261232;
+  --console-screen: #32203E;
+  --console-recess: #16071F;
+  --console-line: #735887;
+  --console-muted: #B9A5C8;
   --chart-1: #FDFB51;
   --chart-2: #00BD84;
   --chart-3: #E0B700;
@@ -57,7 +67,7 @@
   --spacing-boxShadowY: 2px;
   --spacing-reverseBoxShadowX: -2px;
   --spacing-reverseBoxShadowY: -2px;
-  --radius-base: 10px;
+  --radius-base: 14px;
   --shadow-shadow: var(--shadow);
   --font-weight-base: 500;
   --font-weight-heading: 800;
@@ -66,7 +76,10 @@
 @layer base {
   body {
     @apply text-foreground font-base bg-background;
-    transition: background-color 0.5s ease;
+    background:
+      radial-gradient(circle at top left, rgb(253 251 81 / 0.28), transparent 32rem),
+      linear-gradient(180deg, var(--background), color-mix(in srgb, var(--background), var(--console-shell) 8%));
+    transition: background-color 0.25s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -110,9 +123,10 @@ body.game-active nav {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 50%, rgb(253 251 81 / 0.28), transparent 50%),
-    radial-gradient(circle at 80% 30%, rgb(66 32 87 / 0.12), transparent 40%),
-    radial-gradient(circle at 60% 80%, rgb(0 214 150 / 0.10), transparent 45%);
+    linear-gradient(90deg, rgb(66 32 87 / 0.04) 1px, transparent 1px),
+    linear-gradient(rgb(66 32 87 / 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 50% 10%, rgb(253 251 81 / 0.25), transparent 42%);
+  background-size: 22px 22px, 22px 22px, auto;
   pointer-events: none;
 }
 
@@ -122,29 +136,6 @@ body.game-active nav {
     linear-gradient(90deg, var(--border) / 0.06 1px, transparent 1px);
   background-size: 40px 40px;
 }
-
-/* ── Floating color swatches animation ────── */
-@keyframes float-1 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(15px, -20px) rotate(5deg); }
-  50% { transform: translate(-10px, -35px) rotate(-3deg); }
-  75% { transform: translate(20px, -15px) rotate(4deg); }
-}
-@keyframes float-2 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(-20px, -25px) rotate(-6deg); }
-  66% { transform: translate(15px, -10px) rotate(4deg); }
-}
-@keyframes float-3 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(10px, -30px) rotate(8deg); }
-}
-
-.float-swatch-1 { animation: float-1 6s ease-in-out infinite; }
-.float-swatch-2 { animation: float-2 8s ease-in-out infinite; }
-.float-swatch-3 { animation: float-3 7s ease-in-out infinite; }
-
-
 
 /* ── Blink animation ──────────────────────── */
 @keyframes blink {
@@ -164,7 +155,7 @@ body.game-active nav {
 
 /* ── Game-specific styles ─────────────────── */
 .color-swatch {
-  border: 2px solid var(--border);
+  border: 1px solid var(--console-line);
   box-shadow: var(--shadow);
   border-radius: var(--radius-base);
   transition: all 0.2s ease;
@@ -174,7 +165,7 @@ body.game-active nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  border: 2px solid var(--border);
+  border: 1px solid var(--console-line);
   box-shadow: var(--shadow);
   border-radius: var(--radius-base);
   overflow: hidden;
@@ -182,7 +173,7 @@ body.game-active nav {
 }
 
 .swatch-compare > div:first-child {
-  border-right: 2px solid var(--border);
+  border-right: 1px solid var(--console-line);
 }
 
 .hsl-slider-track {
@@ -203,7 +194,7 @@ body.game-active nav {
 
 /* ── Smooth page transitions ──────────────── */
 .page-enter {
-  animation: fadeInUp 0.3s ease-out;
+  animation: fadeInUp 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes fadeInUp {

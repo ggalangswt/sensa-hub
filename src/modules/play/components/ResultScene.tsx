@@ -56,7 +56,7 @@ export default function ResultScene({
   return (
     <div className="game-zone max-w-3xl mx-auto page-enter">
       <div
-        className="relative w-full rounded-2xl overflow-hidden border-2 border-border shadow-shadow flex flex-col"
+        className="relative w-full rounded-[24px] overflow-hidden border border-border/20 shadow-shadow flex flex-col"
         style={{ minHeight: "min(65vh,550px)" }}
       >
         <div className="relative flex-1 p-6 flex flex-col justify-between" style={{ background: hslCss(guess) }}>
@@ -84,7 +84,7 @@ export default function ResultScene({
         <div className="relative flex-1 p-6 flex flex-col justify-between" style={{ background: hslCss(target) }}>
           <div className="flex justify-end">
             {!isPractice && (
-              <div className="text-right animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both bg-black/55 border-2 border-white px-4 py-2 rounded-base">
+              <div className="text-right animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both bg-black/60 border border-white/35 px-4 py-2 rounded-[14px]">
                 <p className="text-white/70 text-xs uppercase tracking-wider mb-1">
                   {soloRefunded ? "Stake refunded to Vault" : tier.payout > 0 ? `Earned (${tier.name})` : "No payout"}
                 </p>
@@ -111,7 +111,7 @@ export default function ResultScene({
             </div>
             <button
               onClick={onAgain}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-border shadow-shadow flex items-center justify-center hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer animate-in fade-in zoom-in-50 duration-500 delay-700 fill-mode-both"
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border border-border/25 shadow-[inset_0_-3px_0_rgb(66_32_87_/_0.16),0_8px_18px_rgb(0_0_0_/_0.16)] flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer animate-in fade-in zoom-in-50 duration-500 delay-700 fill-mode-both"
             >
               <ArrowRight className="w-6 h-6 text-foreground" />
             </button>
