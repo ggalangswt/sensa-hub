@@ -9,8 +9,8 @@ export default function GameModesSection() {
           <Badge className="mb-4">Game Modes</Badge>
           <h2 className="text-3xl sm:text-4xl font-heading text-foreground">Games for memory, timing, and patterns</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-main">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          <Card className="bg-main shadow-[0_12px_26px_rgb(66_32_87_/_0.18)]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Sensa Sound</CardTitle>
@@ -25,7 +25,7 @@ export default function GameModesSection() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-[var(--console-screen)]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Sensa Shape</CardTitle>
@@ -39,7 +39,7 @@ export default function GameModesSection() {
               <div className="flex flex-wrap gap-2"><Badge variant="neutral">Coming soon</Badge><Badge variant="neutral">Pattern skill</Badge></div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-[var(--console-screen)]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Sensa Time</CardTitle>
