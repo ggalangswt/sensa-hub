@@ -22,12 +22,12 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-secondary-background border-b-2 border-border">
+      <nav className="sticky top-0 z-50 border-b border-border/20 bg-[var(--console-shell)] text-background shadow-[0_8px_24px_rgb(66_32_87_/_0.18)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 md:h-16">
             <Link href="/" className="flex items-center gap-2 no-underline">
               <SensaLogo />
-              <span className="font-heading text-xl text-foreground">Sensa</span>
+              <span className="font-heading text-xl text-background">Sensa</span>
             </Link>
 
             {isConnected && (
@@ -41,8 +41,8 @@ export default function Navbar() {
                         href={link.href}
                         className={`text-sm font-heading transition-colors no-underline ${
                           isActive
-                            ? "text-foreground underline decoration-main decoration-4 underline-offset-4"
-                            : "text-foreground/60 hover:text-foreground"
+                            ? "text-main"
+                            : "text-background/65 hover:text-background"
                         }`}
                       >
                         {link.label}
@@ -60,8 +60,8 @@ export default function Navbar() {
       </nav>
 
       {isConnected && (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-secondary-background border-t-2 border-border md:hidden touch-none px-2 pb-safe">
-          <div className="flex items-center justify-around h-16">
+        <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-[var(--console-shell)] px-2 pb-safe text-background shadow-[0_-10px_24px_rgb(66_32_87_/_0.2)] md:hidden touch-none">
+          <div className="flex items-center justify-around h-16 rounded-t-[18px]">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               const Icon = link.icon;
@@ -71,14 +71,14 @@ export default function Navbar() {
                   href={link.href}
                 className={`flex flex-col items-center justify-center w-full h-full no-underline transition-colors ${
                     isActive
-                      ? "text-foreground"
-                      : "text-foreground/40 hover:text-foreground/60"
+                      ? "text-main"
+                      : "text-background/50 hover:text-background/70"
                   }`}
                 >
                   <span
-                    className={`mb-1 rounded-base border-2 px-2 py-1 ${
+                    className={`mb-1 rounded-[12px] border px-2.5 py-1 ${
                       isActive
-                        ? "border-border bg-main shadow-shadow"
+                        ? "border-main/70 bg-main/15 shadow-[inset_0_0_0_1px_rgb(253_251_81_/_0.18)]"
                         : "border-transparent"
                     }`}
                   >
