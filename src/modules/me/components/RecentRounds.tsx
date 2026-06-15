@@ -8,12 +8,12 @@ import type { ProfileData } from "../types/profile.types";
 
 function tierCardClass(tierName: string): string {
   switch (tierName) {
-    case "WHAT?!": return "bg-chart-1/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
-    case "GREAT":   return "bg-chart-2/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
-    case "GOOD":    return "bg-chart-3/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
-    case "OK":      return "bg-chart-5/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
-    case "MEH":     return "bg-chart-4/20 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
-    default:        return "bg-chart-4/30 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.08)]";
+    case "WHAT?!": return "bg-chart-1/30 border-chart-1/45 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
+    case "GREAT":   return "bg-chart-2/30 border-chart-2/45 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
+    case "GOOD":    return "bg-chart-3/30 border-chart-3/45 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
+    case "OK":      return "bg-chart-5/30 border-chart-5/45 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
+    case "MEH":     return "bg-chart-4/20 border-chart-4/40 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
+    default:        return "bg-chart-4/30 border-chart-4/45 shadow-[0_8px_18px_rgb(66_32_87_/_0.10)]";
   }
 }
 
@@ -45,7 +45,7 @@ export default function RecentRounds({
                 <div className="flex min-w-0 items-center gap-3">
                   <span className="shrink-0 text-xs font-base text-foreground/60">#{round.round}</span>
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <Badge className="bg-secondary-background text-foreground border-border">{round.mode}</Badge>
+                    <Badge className="bg-secondary-background text-foreground border-border/25">{round.mode}</Badge>
                     {round.isFriends && <Badge className="bg-chart-1 text-white">Friends</Badge>}
                     <span className="text-xs font-heading text-foreground uppercase">{round.tier}</span>
                   </div>
