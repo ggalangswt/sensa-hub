@@ -54,7 +54,7 @@ export default function EditNameModal({
             if (!saving) onClose();
           }}
           disabled={saving}
-          className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-secondary-background border-2 border-border flex items-center justify-center text-foreground/60 hover:text-foreground transition-all cursor-pointer"
+          className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-secondary-background border border-border/25 flex items-center justify-center text-foreground/60 hover:text-foreground transition-all cursor-pointer"
           aria-label="Close username editor"
         >
           <X className="w-4 h-4" />
