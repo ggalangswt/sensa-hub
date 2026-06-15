@@ -33,7 +33,7 @@ export default function QueueingScene({
       />
 
       {roomCode && (
-        <div className="mb-4 p-3 rounded-base border-2 border-chart-2 bg-chart-2/10 text-center">
+        <div className="mb-4 p-3 rounded-[16px] border border-chart-2/35 bg-chart-2/10 text-center">
           <p className="text-xs text-foreground/60 uppercase tracking-wider">Room Code</p>
           <p className="text-2xl font-heading tracking-[0.3em] text-foreground">{roomCode}</p>
         </div>
@@ -51,9 +51,9 @@ export default function QueueingScene({
             {Array.from({ length: filled }).map((_, i) => (
               <div
                 key={`filled-${i}`}
-                className="flex items-center gap-3 p-3 rounded-base border-2 border-chart-2 bg-chart-2/5 animate-in fade-in slide-in-from-top-1 duration-300"
+                className="flex items-center gap-3 p-3 rounded-[16px] border border-chart-2/35 bg-chart-2/5 animate-in fade-in slide-in-from-top-1 duration-300"
               >
-                <div className="w-8 h-8 rounded-full border-2 border-chart-2 bg-chart-2/20 text-chart-2 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full border border-chart-2/45 bg-chart-2/20 text-chart-2 flex items-center justify-center flex-shrink-0">
                   <Users className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -70,9 +70,9 @@ export default function QueueingScene({
             {Array.from({ length: required - filled }).map((_, i) => (
               <div
                 key={`empty-${i}`}
-                className="flex items-center gap-3 p-3 rounded-base border-2 border-dashed border-border/50 bg-secondary-background/50"
+                className="flex items-center gap-3 p-3 rounded-[16px] border border-dashed border-border/35 bg-secondary-background/50"
               >
-                <div className="w-8 h-8 rounded-full border-2 border-border/40 bg-secondary-background flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full border border-border/30 bg-secondary-background flex items-center justify-center flex-shrink-0">
                   <Loader2 className="w-4 h-4 text-foreground/30 animate-spin" />
                 </div>
                 <span className="text-sm text-foreground/40 font-heading">
