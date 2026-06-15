@@ -72,7 +72,7 @@ export default function LeaderboardScene({
 
   return (
     <div className="max-w-2xl mx-auto page-enter flex flex-col items-center">
-      <div className="w-full max-w-md rounded-base border-2 border-border bg-secondary-background p-5 shadow-shadow sm:p-8">
+      <div className="w-full max-w-md rounded-[24px] border border-border/20 bg-[var(--console-screen)] p-5 shadow-shadow sm:p-8">
         <h2 className="text-xl font-heading text-foreground text-center mb-2 animate-in fade-in slide-in-from-top-2 duration-500 fill-mode-both">
           Match result
         </h2>
@@ -90,14 +90,14 @@ export default function LeaderboardScene({
             return (
               <div
                 key={player.address}
-                className={`relative flex items-center justify-between px-4 py-3 rounded-base border-2 border-border shadow-shadow transition-all duration-300 ${toneBg(tone)} ${
-                  isWinnerP ? "ring-4 ring-main" : ""
+                className={`relative flex items-center justify-between px-4 py-3 rounded-[16px] border border-border/20 shadow-[0_6px_14px_rgb(66_32_87_/_0.10)] transition-all duration-300 ${toneBg(tone)} ${
+                  isWinnerP ? "ring-2 ring-main" : ""
                 } ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="font-heading text-lg w-6 text-foreground/80">#{i + 1}</span>
                   <div
-                    className={`w-9 h-9 rounded-full border-2 border-border flex items-center justify-center font-heading text-xs text-main-foreground shrink-0 ${toneRing(tone)}`}
+                    className={`w-9 h-9 rounded-full border border-border/25 flex items-center justify-center font-heading text-xs text-main-foreground shrink-0 ${toneRing(tone)}`}
                   >
                     {addrInitials(player.address)}
                   </div>
