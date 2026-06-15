@@ -49,7 +49,7 @@ export default function GuessScene({
   return (
     <div className="game-zone max-w-3xl mx-auto page-enter">
       <div
-        className="relative w-full rounded-2xl overflow-hidden border-2 border-border shadow-shadow"
+        className="relative w-full rounded-[24px] overflow-hidden border border-border/20 shadow-shadow"
         style={{ minHeight: "min(70vh,600px)" }}
       >
         <div className="absolute left-0 top-0 bottom-0 z-10 flex">
@@ -67,7 +67,7 @@ export default function GuessScene({
               style={{ writingMode: "vertical-lr" as React.CSSProperties["writingMode"], direction: "ltr" }}
             />
             <div
-              className="absolute left-1/2 w-8 h-8 bg-white rounded-full border-2 border-border shadow-lg pointer-events-none transition-all"
+              className="absolute left-1/2 w-8 h-8 bg-white rounded-full border border-border/30 shadow-lg pointer-events-none transition-all"
               style={{ top: `${(guess.h / 360) * 100}%`, transform: "translate(-50%,-50%)" }}
             />
           </div>
@@ -85,7 +85,7 @@ export default function GuessScene({
               style={{ writingMode: "vertical-lr" as React.CSSProperties["writingMode"], direction: "rtl" }}
             />
             <div
-              className="absolute left-1/2 w-6 h-6 bg-white rounded-full border-2 border-border shadow-lg pointer-events-none transition-all"
+              className="absolute left-1/2 w-6 h-6 bg-white rounded-full border border-border/30 shadow-lg pointer-events-none transition-all"
               style={{ top: `${(1 - guess.s / 100) * 100}%`, transform: "translate(-50%,-50%)" }}
             />
           </div>
@@ -103,7 +103,7 @@ export default function GuessScene({
               style={{ writingMode: "vertical-lr" as React.CSSProperties["writingMode"], direction: "rtl" }}
             />
             <div
-              className="absolute left-1/2 w-6 h-6 bg-white rounded-full border-2 border-border shadow-lg pointer-events-none transition-all"
+              className="absolute left-1/2 w-6 h-6 bg-white rounded-full border border-border/30 shadow-lg pointer-events-none transition-all"
               style={{ top: `${(1 - guess.l / 100) * 100}%`, transform: "translate(-50%,-50%)" }}
             />
           </div>
@@ -120,7 +120,7 @@ export default function GuessScene({
           )}
           <button
             onClick={onSubmit}
-            className="absolute bottom-6 right-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-border shadow-shadow flex items-center justify-center hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer"
+            className="absolute bottom-6 right-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border border-border/25 shadow-[inset_0_-3px_0_rgb(66_32_87_/_0.16),0_8px_18px_rgb(0_0_0_/_0.16)] flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0.5 transition-all cursor-pointer"
           >
             <ArrowRight className="w-6 h-6 text-foreground" />
           </button>
