@@ -10,7 +10,7 @@ export default function BalanceCard({
   claimable: number;
 }) {
   return (
-    <Card className="mb-6 bg-main">
+    <Card className="mb-6 bg-main shadow-[0_12px_26px_rgb(66_32_87_/_0.16)]">
       <CardContent className="pt-6 flex items-center justify-between">
         <div>
           <p className="font-heading text-foreground text-sm">Wallet balance</p>
