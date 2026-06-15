@@ -54,11 +54,11 @@ export default function MatchedLobbyScene({
               return (
                 <div
                   key={player}
-                  className="flex items-center justify-between rounded-base border-2 border-border bg-secondary-background px-4 py-3"
+                  className="flex items-center justify-between rounded-[16px] border border-border/20 bg-secondary-background px-4 py-3"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-border font-heading text-sm ${toneBg(tone)}`}
+                      className={`flex h-10 w-10 items-center justify-center rounded-full border border-border/25 font-heading text-sm ${toneBg(tone)}`}
                     >
                       {addrInitials(player)}
                     </div>
