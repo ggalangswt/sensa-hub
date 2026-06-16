@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import {
-  accuracyFromDeltaE,
-  deltaE,
   tier,
-  HSL,
-  normalizeHsl,
 } from "@/src/utils/color";
+import {
+  SOUND_DEFAULTS,
+  scoreSoundSubmission,
+  type SoundMatchSubmission,
+} from "@/src/modules/play/utils/sound";
 import { redis, parseRedisJson } from "@/lib/db/redis";
 import {
   getSoloReserveBalance,
@@ -175,30 +176,49 @@ async function persistResolvedRound(params: {
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
 
-  const rawTarget = body?.target as Partial<HSL> | undefined;
-  const rawGuess = body?.guess as Partial<HSL> | undefined;
   const roundId = body?.roundId as string | undefined;
   const playerAddress = body?.playerAddress as string | undefined;
   const mode = (body?.mode ?? "solo") as string;
   const isPractice = body?.isPractice ?? false;
-  const rawTime = body?.timeSec as number | undefined;
+  const submission = body as SoundMatchSubmission;
   const timeSec =
-    typeof rawTime === "number" && isFinite(rawTime) && rawTime >= 0
-      ? Math.min(rawTime, 60)
+    Array.isArray(submission?.rounds) && submission.rounds.length > 0
+      ? Math.min(
+          60,
+          submission.rounds.reduce((sum, round) => sum + round.latencyMs, 0) /
+            1000,
+        )
       : undefined;
 
-  const target = normalizeHsl(rawTarget);
-  const guess = normalizeHsl(rawGuess);
-  const dE = deltaE(target, guess);
-  const acc = accuracyFromDeltaE(dE);
+  const canonical = roundId
+    ? scoreSoundSubmission(roundId, submission.difficulty, submission)
+    : {
+        total: submission.totalScore,
+        percent: Number(
+          ((submission.totalScore / SOUND_DEFAULTS.maxScore) * 100).toFixed(2),
+        ),
+        perRound: [],
+      };
+
+  const totalScore = Number(submission.totalScore.toFixed(2));
+  const acc = Number(
+    ((totalScore / SOUND_DEFAULTS.maxScore) * 100).toFixed(2),
+  );
   const t = tier(acc);
 
   const baseResult = {
-    method: "deltaE",
+    method: "sound-total",
     accuracy: acc,
-    deltaE: dE,
     tier: t.name,
     payout: t.payout,
+    totalScore,
+    percentScore: acc,
+    soundSummary: {
+      total: totalScore,
+      percent: acc,
+      rounds: canonical.perRound,
+    },
+    canonicalScore: canonical.total,
   };
 
   if (isPractice || !roundId || !playerAddress) {
@@ -225,7 +245,7 @@ export async function POST(req: Request) {
               tier: t.name,
               score: Math.round(acc * 100),
               timeSec,
-              guess,
+              totalScore,
             },
           ],
           winnerAddress: null,
@@ -257,16 +277,16 @@ export async function POST(req: Request) {
         gameRoundId: roundId,
         mode,
         source: "solo",
-        players: [
-          {
-            address: playerAddress.toLowerCase(),
-            accuracy: acc,
-            tier: t.name,
-            score: Math.round(acc * 100),
-            timeSec,
-            guess,
-          },
-        ],
+          players: [
+            {
+              address: playerAddress.toLowerCase(),
+              accuracy: acc,
+              tier: t.name,
+              score: Math.round(acc * 100),
+              timeSec,
+              totalScore,
+            },
+          ],
         winnerAddress: reward > BigInt(0) ? playerAddress : null,
         rewardByAddress: {
           [playerAddress.toLowerCase()]: t.payout,
@@ -290,14 +310,14 @@ export async function POST(req: Request) {
 
   await redis.set(
     `round:${roundId}:score:${addrLower}`,
-    JSON.stringify({
-      address: addrLower,
-      accuracy: acc,
-      tier: t.name,
-      score: Math.round(acc * 100),
-      timeSec,
-      guess,
-    }),
+      JSON.stringify({
+        address: addrLower,
+        accuracy: acc,
+        tier: t.name,
+        score: Math.round(acc * 100),
+        timeSec,
+        totalScore,
+      }),
     { ex: 3600 },
   );
 
