@@ -1,4 +1,9 @@
-import type { HSL, TargetDifficulty } from "@/src/utils/color";
+import type { TargetDifficulty } from "@/src/utils/color";
+import type {
+  SoundGameplayConfig,
+  SoundMatchSubmission,
+  SoundRoundResult,
+} from "../utils/sound";
 
 export type Phase =
   | "select"
@@ -6,8 +11,7 @@ export type Phase =
   | "queueing"
   | "matched"
   | "lobby"
-  | "preview"
-  | "guess"
+  | "gameplay"
   | "waiting"
   | "leaderboard"
   | "result";
@@ -19,15 +23,40 @@ export type RoundResult = {
   winner: string;
   winnerAccuracy: number;
   winnerPayout: number;
+  totalScore?: number;
+  percentScore?: number;
+  soundSummary?: {
+    total: number;
+    percent: number;
+    rounds: SoundRoundResult[];
+  };
   allScores: {
     address: string;
     accuracy: number;
     tier: string;
     score: number;
     timeSec?: number;
-    guess?: HSL;
+    totalScore?: number;
   }[];
   txHash?: string;
+};
+
+export type SoundStartPayload = {
+  roundId: string;
+  mode: string;
+  difficulty: "easy" | "hard";
+  octaveShift: -1 | 0 | 1;
+  gameplayConfig: SoundGameplayConfig;
+  previewSeconds: number;
+  guessSeconds: number;
+  startedAt: number;
+};
+
+export type SoundSubmitPayload = SoundMatchSubmission & {
+  mode: string;
+  isPractice: boolean;
+  playerAddress?: string;
+  roundId?: string;
 };
 
 export type RoomPlayer = {
