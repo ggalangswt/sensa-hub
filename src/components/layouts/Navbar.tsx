@@ -34,7 +34,9 @@ export default function Navbar() {
               <div className="flex items-center gap-2 md:gap-8">
                 <div className="hidden md:flex items-center gap-8">
                   {NAV_LINKS.map((link) => {
-                    const isActive = pathname === link.href;
+                    const isActive =
+                      pathname === link.href ||
+                      (link.href === "/play" && pathname.startsWith("/play/"));
                     return (
                       <Link
                         key={link.href}
@@ -63,7 +65,9 @@ export default function Navbar() {
         <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-[var(--console-shell)] px-2 pb-safe text-background shadow-[0_-10px_24px_rgb(66_32_87_/_0.2)] md:hidden touch-none">
           <div className="flex items-center justify-around h-16 rounded-t-[18px]">
             {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                pathname === link.href ||
+                (link.href === "/play" && pathname.startsWith("/play/"));
               const Icon = link.icon;
               return (
                 <Link
