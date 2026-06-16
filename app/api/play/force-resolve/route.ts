@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
 import { redis, parseRedisJson } from "@/lib/db/redis";
-import {
-  deltaE,
-  accuracyFromDeltaE,
-  tier,
-  targetFromRoundId,
-  type TargetDifficulty,
-} from "@/src/utils/color";
+import { tier } from "@/src/utils/color";
 import { resolveMultiplayer } from "../submit/route";
-
-const DEFAULT_GUESS = { h: 180, s: 50, l: 50 };
 
 export async function POST(request: Request) {
   try {
@@ -35,18 +27,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Round not found" }, { status: 404 });
     }
 
-    const meta = parseRedisJson<{ difficulty?: TargetDifficulty }>(
-      await redis.get(`round:${roundId}:meta`),
-    );
-    const target = targetFromRoundId(roundId, meta?.difficulty ?? "medium");
-
-    // Auto-submit default guess for any player who hasn't submitted
+    // Auto-submit a zero-score fallback for any player who hasn't submitted.
     for (const p of players) {
       const key = `round:${roundId}:score:${p.toLowerCase()}`;
       const existing = await redis.get(key);
       if (!existing) {
-        const dE = deltaE(target, DEFAULT_GUESS);
-        const acc = accuracyFromDeltaE(dE);
+        const acc = 0;
         const t = tier(acc);
         await redis.set(
           key,
@@ -54,9 +40,9 @@ export async function POST(request: Request) {
             address: p.toLowerCase(),
             accuracy: acc,
             tier: t.name,
-            score: Math.round(acc * 100),
+            score: 0,
             timeSec: 15,
-            guess: DEFAULT_GUESS,
+            totalScore: 0,
           }),
           { ex: 3600 },
         );
