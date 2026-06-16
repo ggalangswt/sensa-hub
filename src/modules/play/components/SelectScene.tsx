@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import {
+  ArrowLeft,
   ArrowRight,
   Crown,
   Gamepad2,
@@ -81,6 +82,8 @@ export default function SelectScene({
   tab,
   setTab,
   onStart,
+  showBackToGames,
+  onBackToGames,
   onCreateRoom,
   onJoinRoom,
   onJoinOnline,
@@ -90,6 +93,8 @@ export default function SelectScene({
 }: {
   tab: TabKey;
   setTab: (t: TabKey) => void;
+  showBackToGames?: boolean;
+  onBackToGames?: () => void;
   onStart: (
     m: Mode,
     opts?: { practice?: boolean; difficulty?: TargetDifficulty },
@@ -132,8 +137,16 @@ export default function SelectScene({
             {onlineCount !== null ? `${onlineCount} online` : "Ready"}
           </Badge>
         }
-        title="Choose your next round"
-        description="Practice free, play solo, or bring friends into a private room. Money states stay visible before you Deposit."
+        title="Sensa Sound"
+        description="Sensa Sound is live. Pick Practice, Solo stake, or a multiplayer room before the round starts."
+        action={
+          showBackToGames && onBackToGames ? (
+            <Button variant="neutral" size="sm" onClick={onBackToGames}>
+              <ArrowLeft className="h-4 w-4" />
+              Games
+            </Button>
+          ) : undefined
+        }
       />
 
       <div className="mb-4 grid grid-cols-2 gap-2 rounded-[18px] border border-border/20 bg-[var(--console-shell)] p-2 shadow-shadow">
