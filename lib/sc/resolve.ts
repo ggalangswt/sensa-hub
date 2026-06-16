@@ -164,5 +164,5 @@ export type PlayerScore = {
   tier: string;
   score: number;
   timeSec?: number;
-  guess?: { h: number; s: number; l: number };
+  totalScore?: number;
 };

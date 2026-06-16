@@ -5,14 +5,8 @@ import { useRouter } from "next/navigation";
 import { useReadContract } from "wagmi";
 import { useWallet } from "@/src/provider/WalletContext";
 import { GAME_ADDRESS, gameAbi } from "@/lib/sc/contracts";
-import {
-  accuracy,
-  tier,
-  deltaE,
-  randomTarget,
-  targetFromRoundId,
-} from "@/src/utils/color";
-import type { HSL, TargetDifficulty } from "@/src/utils/color";
+import { tier } from "@/src/utils/color";
+import type { TargetDifficulty } from "@/src/utils/color";
 import { showErrorToast, showSuccessToast } from "@/src/utils/toast";
 import { useStake } from "./hooks/useStake";
 import { useMatchmaking } from "./hooks/useMatchmaking";
@@ -24,12 +18,18 @@ import {
   submitGuess as apiSubmitGuess,
 } from "./services/play.service";
 import { cancelMatchmaking } from "./services/matchmaking.service";
+import {
+  buildSoundGameplayConfig,
+  SOUND_DEFAULTS,
+  type SoundMatchSubmission,
+} from "./utils/sound";
 import type {
   Phase,
   Mode,
   TabKey,
   RoundResult,
   Room,
+  SoundStartPayload,
 } from "./types/play.types";
 import { MODE_NUM, STAKE_AMOUNT } from "./types/play.types";
 import SelectScene from "./components/SelectScene";
@@ -37,11 +37,10 @@ import StakingScene from "./components/StakingScene";
 import QueueingScene from "./components/QueueingScene";
 import MatchedLobbyScene from "./components/MatchedLobbyScene";
 import LobbyScene from "./components/LobbyScene";
-import PreviewScene from "./components/PreviewScene";
-import GuessScene from "./components/GuessScene";
-import WaitingScene from "./components/WaitingScene";
 import LeaderboardScene from "./components/LeaderboardScene";
-import ResultScene from "./components/ResultScene";
+import SoundGameplayFrame from "./components/SoundGameplayFrame";
+import SoundWaitingScene from "./components/SoundWaitingScene";
+import SoundResultScene from "./components/SoundResultScene";
 
 export default function PlayClient({
   initialRoomCode,
@@ -58,10 +57,11 @@ export default function PlayClient({
   const [mode, setMode] = useState<Mode>("solo");
   const [difficulty, setDifficulty] = useState<TargetDifficulty>("medium");
   const [isPractice, setIsPractice] = useState(false);
-  const [target, setTarget] = useState<HSL>({ h: 140, s: 60, l: 55 });
-  const [guess, setGuess] = useState<HSL>({ h: 180, s: 50, l: 50 });
   const [roundId, setRoundId] = useState<string | null>(null);
   const [roundResult, setRoundResult] = useState<RoundResult | null>(null);
+  const [soundConfig, setSoundConfig] = useState<SoundStartPayload | null>(null);
+  const [soundSubmission, setSoundSubmission] =
+    useState<SoundMatchSubmission | null>(null);
   const [matchedPlayers, setMatchedPlayers] = useState<string[]>([]);
   const [matchedStakeCount, setMatchedStakeCount] = useState(0);
   const [matchedStakedPlayers, setMatchedStakedPlayers] = useState<string[]>(
@@ -72,7 +72,6 @@ export default function PlayClient({
   const [initRoomJoined, setInitRoomJoined] = useState(false);
   const [soloRefunded, setSoloRefunded] = useState(false);
 
-  const guessStartRef = useRef<number>(0);
   const phaseRef = useRef<{ address?: string; mode: Mode; phase: Phase }>({
     mode: "solo",
     phase: "select",
@@ -88,6 +87,12 @@ export default function PlayClient({
   });
   const soloReserveBalance = soloReserveRaw ? Number(soloReserveRaw) / 1e6 : 0;
   const onlineCount = useOnlineCount(address);
+
+  const toSoundDifficulty = useCallback(
+    (input: TargetDifficulty): "easy" | "hard" =>
+      input === "hard" || input === "god" ? "hard" : "easy",
+    [],
+  );
 
   const { doStake, readStakedPlayers, needsApproval, stakingStep } =
     useStake(address);
@@ -124,10 +129,10 @@ export default function PlayClient({
       setMatchedCountdown(null);
       setRoundId(newRoundId);
       setRoundResult(null);
+      setSoundSubmission(null);
+      setSoundConfig(null);
       setSoloRefunded(false);
       setDifficulty("medium");
-      setTarget(targetFromRoundId(newRoundId, "medium"));
-      setGuess({ h: 180, s: 50, l: 50 });
       setPhase("matched");
     },
     [],
@@ -154,12 +159,26 @@ export default function PlayClient({
     setMatchedPlayers(room.players.map((p) => p.address));
     setRoundId(room.roundId);
     setRoundResult(null);
+    setSoundSubmission(null);
     setSoloRefunded(false);
-    setTarget(targetFromRoundId(room.roundId, room.difficulty ?? "medium"));
-    setGuess({ h: 180, s: 50, l: 50 });
+    const soundDifficulty = toSoundDifficulty(room.difficulty ?? "medium");
+    setSoundConfig({
+      roundId: room.roundId,
+      mode: mKey,
+      difficulty: soundDifficulty,
+      octaveShift: 0,
+      gameplayConfig: buildSoundGameplayConfig({
+        matchId: room.roundId,
+        difficulty: soundDifficulty,
+        octaveShift: 0,
+      }),
+      previewSeconds: soundDifficulty === "hard" ? 1.25 : 2.5,
+      guessSeconds: 15,
+      startedAt: Date.now(),
+    });
     setIsPractice(false);
-    setPhase("preview");
-  }, []);
+    setPhase("gameplay");
+  }, [toSoundDifficulty]);
 
   const handleRoomGone = useCallback((msg?: string) => {
     if (msg) {
@@ -251,16 +270,33 @@ export default function PlayClient({
     if (matchedCountdown === null) return;
     if (matchedCountdown <= 0) {
       setMatchedCountdown(null);
-      setPhase("preview");
+      if (roundId) {
+        const nextDifficulty = toSoundDifficulty(difficulty);
+        setSoundConfig({
+          roundId,
+          mode,
+          difficulty: nextDifficulty,
+          octaveShift: 0,
+          gameplayConfig: buildSoundGameplayConfig({
+            matchId: roundId,
+            difficulty: nextDifficulty,
+            octaveShift: 0,
+          }),
+          previewSeconds: nextDifficulty === "hard" ? 1.25 : 2.5,
+          guessSeconds: 15,
+          startedAt: Date.now(),
+        });
+      }
+      setPhase("gameplay");
       return;
     }
 
     const id = setTimeout(() => setMatchedCountdown((c) => (c ?? 0) - 1), 1000);
     return () => clearTimeout(id);
-  }, [matchedCountdown, phase]);
+  }, [difficulty, matchedCountdown, mode, phase, roundId, toSoundDifficulty]);
 
   useEffect(() => {
-    if (phase === "guess" || phase === "preview") {
+    if (phase === "gameplay") {
       document.body.classList.add("game-active");
     } else {
       document.body.classList.remove("game-active");
@@ -326,6 +362,8 @@ export default function PlayClient({
     setDifficulty(nextDiff);
     setIsPractice(practice);
     setRoundResult(null);
+    setSoundSubmission(null);
+    setSoundConfig(null);
     setSoloRefunded(false);
 
     if (practice) {
@@ -335,13 +373,16 @@ export default function PlayClient({
           tab: "practice",
           difficulty: nextDiff,
         });
-        setTarget(j.target ?? randomTarget(nextDiff));
+        setSoundConfig(j);
         setRoundId(j.roundId);
-      } catch {
-        setTarget(randomTarget(nextDiff));
+        setPhase("gameplay");
+      } catch (err: unknown) {
+        const e = err as { shortMessage?: string; message?: string };
+        roomManager.setError(
+          e?.shortMessage || e?.message || "Could not start sound match.",
+        );
+        setPhase("select");
       }
-      setGuess({ h: 180, s: 50, l: 50 });
-      setPhase("preview");
       return;
     }
 
@@ -353,16 +394,15 @@ export default function PlayClient({
         tab: "play",
         difficulty: nextDiff,
       });
-      setTarget(j.target ?? randomTarget(nextDiff));
+      setSoundConfig(j);
       setRoundId(j.roundId);
-      setGuess({ h: 180, s: 50, l: 50 });
       setPhase("staking");
       await doStake(j.roundId, MODE_NUM[m], STAKE_AMOUNT[m]);
       showSuccessToast("Stake locked", {
-        description: "Your round is ready. The preview is starting now.",
+        description: "Your sound match is ready. Opening gameplay now.",
         id: "solo-stake-locked",
       });
-      setPhase("preview");
+      setPhase("gameplay");
     } catch (err: unknown) {
       const e = err as { shortMessage?: string; message?: string };
       roomManager.setError(
@@ -372,13 +412,10 @@ export default function PlayClient({
     }
   };
 
-  const submitGuess = useCallback(async () => {
+  const submitGuess = useCallback(async (submission: SoundMatchSubmission) => {
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
-
-    const timeSec = guessStartRef.current
-      ? (Date.now() - guessStartRef.current) / 1000
-      : undefined;
+    setSoundSubmission(submission);
 
     if (mode !== "solo" && !isPractice) {
       setPhase("waiting");
@@ -386,13 +423,11 @@ export default function PlayClient({
 
       try {
         const res = await apiSubmitGuess({
-          target,
-          guess,
+          ...submission,
           mode,
           roundId: roundId ?? undefined,
           playerAddress: address ?? undefined,
           isPractice,
-          timeSec,
         });
         if (res.resolved || res.winner) {
           setRoundResult(res as unknown as RoundResult);
@@ -419,13 +454,11 @@ export default function PlayClient({
     } else {
       try {
         const res = await apiSubmitGuess({
-          target,
-          guess,
+          ...submission,
           mode,
           roundId: roundId ?? undefined,
           playerAddress: address ?? undefined,
           isPractice,
-          timeSec,
         });
         if (res.refunded) {
           setSoloRefunded(true);
@@ -437,7 +470,7 @@ export default function PlayClient({
       } catch {}
       resultTimeoutRef.current = setTimeout(() => setPhase("result"), 600);
     }
-  }, [target, guess, mode, roundId, address, isPractice, startResultPolling]);
+  }, [mode, roundId, address, isPractice, startResultPolling]);
 
   const stakeMatchedRound = useCallback(async () => {
     if (!roundId || mode === "solo") return;
@@ -473,9 +506,13 @@ export default function PlayClient({
     }
   }, [doStake, mode, readStakedPlayers, roundId, roomManager]);
 
-  const acc = accuracy(target, guess);
-  const t = tier(acc);
-  const dE = deltaE(target, guess);
+  const soundPercent =
+    soundSubmission?.totalScore != null
+      ? Number(
+          ((soundSubmission.totalScore / SOUND_DEFAULTS.maxScore) * 100).toFixed(2),
+        )
+      : roundResult?.percentScore ?? 0;
+  const soundTier = tier(soundPercent);
 
   if (phase === "select") {
     return (
@@ -626,41 +663,29 @@ export default function PlayClient({
     );
   }
 
-  if (phase === "preview") {
+  if (phase === "gameplay" && roundId && soundConfig) {
     return (
-      <PreviewScene
-        target={target}
-        initialTime={5}
-        mode={mode}
-        isPractice={isPractice}
-        onContinue={() => {
-          guessStartRef.current = Date.now();
-          setPhase("guess");
+        <SoundGameplayFrame
+          config={soundConfig}
+          roomId={roundId}
+          walletAddress={address ?? undefined}
+          onComplete={submitGuess}
+        onError={(message) => {
+          showErrorToast("Gameplay error", {
+            description: message,
+            id: `sound-gameplay-error:${message}`,
+          });
+          setPhase("select");
         }}
-      />
-    );
-  }
-
-  if (phase === "guess") {
-    return (
-      <GuessScene
-        guess={guess}
-        setGuess={setGuess}
-        initialTime={15}
-        onSubmit={submitGuess}
-        isPractice={isPractice}
-        target={target}
       />
     );
   }
 
   if (phase === "waiting") {
     return (
-      <WaitingScene
-        myAccuracy={acc}
-        myTier={t}
-        target={target}
-        guess={guess}
+      <SoundWaitingScene
+        totalScore={soundSubmission?.totalScore ?? 0}
+        percentScore={soundPercent}
       />
     );
   }
@@ -682,6 +707,8 @@ export default function PlayClient({
               if (!updated) return;
             }
             setRoundResult(null);
+            setSoundSubmission(null);
+            setSoundConfig(null);
             setPhase("lobby");
             roomManager.startPolling(roomManager.room.code);
             return;
@@ -692,6 +719,8 @@ export default function PlayClient({
           isSubmittingRef.current = false;
           setMatchedPlayers([]);
           setRoundResult(null);
+          setSoundSubmission(null);
+          setSoundConfig(null);
           setPhase("select");
         }}
       />
@@ -699,19 +728,18 @@ export default function PlayClient({
   }
 
   return (
-    <ResultScene
-      target={target}
-      guess={guess}
-      acc={acc}
-      tier={t}
-      deltaE={dE}
+    <SoundResultScene
+      totalScore={soundSubmission?.totalScore ?? roundResult?.totalScore ?? 0}
+      percentScore={soundPercent}
+      payout={soundTier.payout}
+      label={soundTier.name}
       isPractice={isPractice}
-      mode={mode}
-      matchedPlayers={matchedPlayers}
       soloRefunded={soloRefunded}
       onAgain={() => {
         isSubmittingRef.current = false;
         setMatchedPlayers([]);
+        setSoundSubmission(null);
+        setSoundConfig(null);
         setSoloRefunded(false);
         setPhase("select");
       }}

@@ -1,10 +1,15 @@
-import type { HSL, TargetDifficulty } from "@/src/utils/color";
+import type { TargetDifficulty } from "@/src/utils/color";
+import type {
+  RoundResult,
+  SoundStartPayload,
+  SoundSubmitPayload,
+} from "../types/play.types";
 
 export async function startRound(payload: {
   mode: string;
   tab: "play" | "practice";
   difficulty: TargetDifficulty;
-}): Promise<{ roundId: string; target?: HSL }> {
+}): Promise<SoundStartPayload> {
   const res = await fetch("/api/play/start", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -13,21 +18,13 @@ export async function startRound(payload: {
   return res.json();
 }
 
-export async function submitGuess(payload: {
-  target: HSL;
-  guess: HSL;
-  mode: string;
-  roundId?: string;
-  playerAddress?: string;
-  isPractice: boolean;
-  timeSec?: number;
-}): Promise<{
+export async function submitGuess(payload: SoundSubmitPayload): Promise<{
   resolved?: boolean;
   winner?: string;
   onChainError?: string;
   refunded?: boolean;
   refundReason?: string;
-}> {
+} & Partial<RoundResult>> {
   const res = await fetch("/api/play/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
