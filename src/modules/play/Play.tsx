@@ -45,8 +45,10 @@ import ResultScene from "./components/ResultScene";
 
 export default function PlayClient({
   initialRoomCode,
+  showBackToGames = false,
 }: {
   initialRoomCode?: string;
+  showBackToGames?: boolean;
 }) {
   const router = useRouter();
   const { address } = useWallet();
@@ -166,8 +168,12 @@ export default function PlayClient({
         id: `room-gone:${msg}`,
       });
     }
+    if (initialRoomCode) {
+      router.push("/play/sound");
+      return;
+    }
     setPhase("select");
-  }, []);
+  }, [initialRoomCode, router]);
 
   const { stopPolling: stopRoomPolling, ...roomManager } = useRoomManager(
     address,
@@ -476,6 +482,8 @@ export default function PlayClient({
       <SelectScene
         tab={tab}
         setTab={setTab}
+        showBackToGames={showBackToGames}
+        onBackToGames={() => router.push("/play")}
         onStart={startRound}
         onCreateRoom={async (input) => {
           const code = await roomManager.create(input);
@@ -569,7 +577,7 @@ export default function PlayClient({
             description: "You are back at the mode selection screen.",
             id: `room-left:${code}`,
           });
-          if (initialRoomCode) router.push("/play");
+          if (initialRoomCode) router.push("/play/sound");
           else setPhase("select");
         }}
         onCancel={async () => {
@@ -580,7 +588,7 @@ export default function PlayClient({
             description: "The lobby has been closed.",
             id: `room-cancelled:${code}`,
           });
-          if (initialRoomCode) router.push("/play");
+          if (initialRoomCode) router.push("/play/sound");
           else setPhase("select");
         }}
         onKick={async (targetAddress) => {
