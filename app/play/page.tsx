@@ -1,11 +1,10 @@
-import React from 'react'
-import Play from '@/src/modules/play/Play'
 import AppLayout from "@/src/components/layouts/AppLayout"
+import GamePickerScene from "@/src/modules/play/components/GamePickerScene"
 
 const page = () => {
   return (
     <AppLayout>
-      <Play />
+      <GamePickerScene />
     </AppLayout>
   )
 }
