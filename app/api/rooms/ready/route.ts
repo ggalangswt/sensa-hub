@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRoom, saveRoom, findPlayer } from "@/lib/rooms";
+import { getRoom, saveRoom, findPlayer, usdcToRaw } from "@/lib/rooms";
 import { readStake } from "@/lib/sc/refund";
 
 export async function POST(req: Request) {
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ room });
     }
 
-    const required = BigInt(room.stakeAmount) * BigInt(1_000_000);
+    const required = usdcToRaw(room.stakeAmount);
     const actual = await readStake(room.roundId, walletAddress);
 
     if (actual >= required) {
