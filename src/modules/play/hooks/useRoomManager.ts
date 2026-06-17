@@ -12,10 +12,9 @@ import {
   resetRoom as apiResetRoom,
   pollRoom,
 } from "../services/rooms.service";
-import type { Room, Mode } from "../types/play.types";
-import { USDC_DECIMALS, MODE_NUM } from "../types/play.types";
+import type { Room } from "../types/play.types";
+import { usdcToRaw } from "../types/play.types";
 import type { TargetDifficulty } from "@/src/utils/color";
-import { targetFromRoundId } from "@/src/utils/color";
 
 export function useRoomManager(
   address: string | null,
@@ -217,7 +216,7 @@ export function useRoomManager(
 
       setReadying(true);
       try {
-        const amount = BigInt(currentRoom.stakeAmount) * USDC_DECIMALS;
+        const amount = usdcToRaw(currentRoom.stakeAmount);
         await doStake(currentRoom.roundId, currentRoom.mode, amount);
         let flipped = false;
         for (let i = 0; i < 10 && !flipped; i++) {
