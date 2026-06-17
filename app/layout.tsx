@@ -23,10 +23,39 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Sensa",
   description:
     "A mobile-first brain skill game hub on Celo. Train memory, focus, timing, and pattern recognition with free and Stablecoin play.",
+  icons: {
+    icon: [
+      { url: "/sensalogo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
+  openGraph: {
+    title: "Sensa",
+    description:
+      "A mobile-first brain skill game hub on Celo. Train memory, focus, timing, and pattern recognition with free and Stablecoin play.",
+    images: [{ url: "/sensalogo.png", width: 458, height: 458, alt: "Sensa" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Sensa",
+    description:
+      "A mobile-first brain skill game hub on Celo. Train memory, focus, timing, and pattern recognition with free and Stablecoin play.",
+    images: ["/sensalogo.png"],
+  },
 };
 
 export const viewport: Viewport = {
