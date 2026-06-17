@@ -115,7 +115,7 @@ export default function MatchedLobbyScene({
           ) : myStaked ? (
             <><Check className="w-4 h-4" /> Deposited</>
           ) : (
-            <>Deposit 10 USDC</>
+            <>Deposit 0.5 USDC</>
           )}
         </Button>
       )}
