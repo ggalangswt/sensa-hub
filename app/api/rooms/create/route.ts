@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     const stake = Number(stakeAmount ?? 0);
     if (paid && !isAllowedStake(stake)) {
       return NextResponse.json(
-        { error: "stakeAmount must be 1, 5, 10, 15, or 20" },
+        { error: "stakeAmount must be 0.2, 0.5, 1, 2, or 5" },
         { status: 400 },
       );
     }

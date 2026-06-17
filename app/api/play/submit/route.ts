@@ -16,6 +16,7 @@ import {
 } from "@/lib/sc/resolve";
 import { backendRefund } from "@/lib/sc/refund";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import { usdcToRaw } from "@/lib/rooms";
 
 function soloRewardAmount(tierName: string): {
   reward: bigint;
@@ -24,15 +25,15 @@ function soloRewardAmount(tierName: string): {
   switch (tierName) {
     case "WHAT?!":
     case "WHAT":
-      return { reward: BigInt(10_000_000), tierEnum: 5 };
+      return { reward: usdcToRaw(2), tierEnum: 5 };
     case "GREAT":
-      return { reward: BigInt(8_000_000), tierEnum: 4 };
+      return { reward: usdcToRaw(1.5), tierEnum: 4 };
     case "GOOD":
-      return { reward: BigInt(6_000_000), tierEnum: 3 };
+      return { reward: usdcToRaw(1), tierEnum: 3 };
     case "OK":
-      return { reward: BigInt(4_000_000), tierEnum: 2 };
+      return { reward: usdcToRaw(0.5), tierEnum: 2 };
     case "MEH":
-      return { reward: BigInt(2_000_000), tierEnum: 1 };
+      return { reward: usdcToRaw(0.2), tierEnum: 1 };
     default:
       return { reward: BigInt(0), tierEnum: 0 };
   }
@@ -270,7 +271,7 @@ export async function POST(req: Request) {
         [tierEnum],
         [BigInt(Math.round(acc * 100))],
         BigInt(0),
-        BigInt(5_000_000),
+        usdcToRaw(1),
         true,
       );
       await persistResolvedRound({
@@ -412,8 +413,7 @@ export async function resolveMultiplayer(
     source?: "public" | "private";
   }>(await redis.get(`round:${roundId}:meta`));
   const casual = meta?.casual === true;
-  const stakePerPlayer =
-    BigInt((meta?.stakeAmount ?? 10) as number) * BigInt(1_000_000);
+  const stakePerPlayer = usdcToRaw(meta?.stakeAmount ?? 0.5);
   const source = meta?.source === "private" ? "private" : "public";
 
   if (casual) {

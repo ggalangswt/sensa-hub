@@ -116,7 +116,7 @@ export default function SelectScene({
   const [roomName, setRoomName] = useState("");
   const [maxPlayers, setMaxPlayers] = useState(2);
   const [isPaid, setIsPaid] = useState(false);
-  const [stakeAmount, setStakeAmount] = useState(1);
+  const [stakeAmount, setStakeAmount] = useState(0.5);
   const [joinCode, setJoinCode] = useState("");
 
   const resetPanel = () => {
@@ -124,7 +124,7 @@ export default function SelectScene({
     setRoomName("");
     setMaxPlayers(2);
     setIsPaid(false);
-    setStakeAmount(1);
+    setStakeAmount(0.5);
     setJoinCode("");
   };
 
@@ -186,13 +186,13 @@ export default function SelectScene({
           <ModeActionCard
             icon={<Swords className="h-5 w-5" />}
             title="Solo stake"
-            description="Deposit 5 USDC, play a short skill round, then winnings or refunds appear in Vault."
+            description="Deposit 1 USDC, play a short skill round, then winnings or refunds appear in Vault."
             cta="Play"
             onClick={() => onStart("solo")}
             meta={
               <>
                 <Badge className="gap-1">
-                  5 <UsdcIcon size={12} />
+                  1 <UsdcIcon size={12} />
                 </Badge>
                 <Badge variant="neutral">Vault payout</Badge>
                 <Badge variant="neutral">Network fee applies</Badge>
@@ -201,15 +201,15 @@ export default function SelectScene({
           />
 
           <TrustStatusStrip
-            tone={soloReserveBalance >= 5 ? "info" : "warning"}
+            tone={soloReserveBalance >= 2 ? "info" : "warning"}
             title={
-              soloReserveBalance >= 5
-                ? "Solo reserve can cover payouts"
+              soloReserveBalance >= 2
+                ? "Solo reserve can cover top payouts"
                 : "Low reserve: stake may refund"
             }
           >
             Current reserve is {formatCompactUsdc(soloReserveBalance)} USDC. If
-            the prize reserve is too low, your 5 USDC stake returns to Vault.
+            the prize reserve is too low, your 1 USDC stake returns to Vault.
           </TrustStatusStrip>
         </div>
       ) : (
@@ -239,7 +239,7 @@ export default function SelectScene({
               <>
                 <Badge variant="neutral">Live queue</Badge>
                 <Badge className="gap-1">
-                  10 <UsdcIcon size={12} />
+                  0.5 <UsdcIcon size={12} />
                 </Badge>
                 <Badge variant="neutral">Vault payout</Badge>
               </>
@@ -442,7 +442,7 @@ export default function SelectScene({
                     <span>
                       <span className="block font-heading">1v1 duel</span>
                       <span className="block text-xs font-base opacity-75">
-                        2 players · 10 USDC Deposit
+                        2 players · 0.5 USDC Deposit
                       </span>
                     </span>
                   </Button>
@@ -458,7 +458,7 @@ export default function SelectScene({
                     <span>
                       <span className="block font-heading">Quick royale</span>
                       <span className="block text-xs font-base opacity-75">
-                        5 players · 10 USDC Deposit
+                        5 players · 0.5 USDC Deposit
                       </span>
                     </span>
                   </Button>
