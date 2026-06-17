@@ -13,12 +13,14 @@ export default function SoundGameplayFrame({
   roomId,
   walletAddress,
   onComplete,
+  onExit,
   onError,
 }: {
   config: SoundStartPayload;
   roomId: string;
   walletAddress?: string;
   onComplete: (submission: SoundMatchSubmission) => void;
+  onExit: () => void;
   onError: (message: string) => void;
 }) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -44,6 +46,11 @@ export default function SoundGameplayFrame({
         return;
       }
 
+      if (data.type === "sensa-sound:exit") {
+        onExit();
+        return;
+      }
+
       if (data.type === "sensa-sound:match-complete") {
         const payload = data.payload as
           | { submission?: SoundMatchSubmission }
@@ -58,7 +65,7 @@ export default function SoundGameplayFrame({
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [onComplete, onError]);
+  }, [onComplete, onError, onExit]);
 
   useEffect(() => {
     if (!frameReady || !iframeRef.current?.contentWindow) return;

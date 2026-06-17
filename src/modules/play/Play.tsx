@@ -665,11 +665,18 @@ export default function PlayClient({
 
   if (phase === "gameplay" && roundId && soundConfig) {
     return (
-        <SoundGameplayFrame
-          config={soundConfig}
-          roomId={roundId}
-          walletAddress={address ?? undefined}
-          onComplete={submitGuess}
+      <SoundGameplayFrame
+        config={soundConfig}
+        roomId={roundId}
+        walletAddress={address ?? undefined}
+        onComplete={submitGuess}
+        onExit={() => {
+          setSoundConfig(null);
+          setSoundSubmission(null);
+          setRoundResult(null);
+          setPhase("select");
+          router.push("/play/sound");
+        }}
         onError={(message) => {
           showErrorToast("Gameplay error", {
             description: message,
