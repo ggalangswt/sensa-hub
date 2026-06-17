@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { redis, parseRedisJson } from "@/lib/db/redis";
+import { redis } from "@/lib/db/redis";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { randomBytes } from "crypto";
 
@@ -61,7 +61,7 @@ export async function tryMatch(
       `round:${roundId}:meta`,
       JSON.stringify({
         casual: false,
-        stakeAmount: 10,
+        stakeAmount: 0.5,
         mode,
         source: "public",
       }),
