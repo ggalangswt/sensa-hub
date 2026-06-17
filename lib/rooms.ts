@@ -18,7 +18,7 @@ export type Room = {
   leader: string;
   maxPlayers: number;          // 2..5
   paid: boolean;
-  stakeAmount: number;         // USDC units (1/5/10/15/20), 0 if casual
+  stakeAmount: number;         // USDC units (0.2/0.5/1/2/5), 0 if casual
   difficulty: RoomDifficulty;
   mode: 0 | 1 | 2;             // 1 DUEL (2p), 2 ROYALE (3-5p)
   status: RoomStatus;
@@ -29,12 +29,16 @@ export type Room = {
 };
 
 export const ROOM_TTL_SECONDS = 10 * 60;
-export const ALLOWED_STAKES = [1, 5, 10, 15, 20] as const;
+export const ALLOWED_STAKES = [0.2, 0.5, 1, 2, 5] as const;
 export type AllowedStake = (typeof ALLOWED_STAKES)[number];
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 export function isAllowedStake(stake: number): stake is AllowedStake {
   return ALLOWED_STAKES.some((allowed) => allowed === stake);
+}
+
+export function usdcToRaw(amount: number): bigint {
+  return BigInt(Math.round(amount * 1_000_000));
 }
 
 export function generateRoomCode(len = 6): string {
