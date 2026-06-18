@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { redis } from "@/lib/db/redis";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { randomBytes } from "crypto";
+import {
+  createSoundRoundMeta,
+  saveSoundRoundMeta,
+} from "@/lib/sound-round";
 
 export const QUEUE_TTL = 60; // seconds — generous window for slow connections / tab throttling
 
@@ -57,17 +61,19 @@ export async function tryMatch(
     pipeline.set(`round:${roundId}:players`, JSON.stringify(matchedPlayers), {
       ex: 3600,
     });
-    pipeline.set(
-      `round:${roundId}:meta`,
-      JSON.stringify({
+    await pipeline.exec();
+    await saveSoundRoundMeta(
+      roundId,
+      createSoundRoundMeta({
+        roundId,
+        mode: mode === 2 ? "royale" : "duel",
+        source: "public",
         casual: false,
         stakeAmount: 0.5,
-        mode,
-        source: "public",
+        difficulty: "easy",
+        players: matchedPlayers,
       }),
-      { ex: 3600 },
     );
-    await pipeline.exec();
 
     // Supabase analytics — non-fatal
     try {

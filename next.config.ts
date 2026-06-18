@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@sensa/sound"],
   turbopack: {
-    root: process.cwd(),
+    root: path.resolve(process.cwd(), ".."),
   },
   experimental: {
     optimizePackageImports: [

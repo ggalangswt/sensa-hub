@@ -3,12 +3,14 @@ import type {
   RoundResult,
   SoundStartPayload,
   SoundSubmitPayload,
+  SoundSubmissionAck,
 } from "../types/play.types";
 
 export async function startRound(payload: {
   mode: string;
   tab: "play" | "practice";
   difficulty: TargetDifficulty;
+  playerAddress?: string;
 }): Promise<SoundStartPayload> {
   const res = await fetch("/api/play/start", {
     method: "POST",
@@ -24,13 +26,17 @@ export async function submitGuess(payload: SoundSubmitPayload): Promise<{
   onChainError?: string;
   refunded?: boolean;
   refundReason?: string;
-} & Partial<RoundResult>> {
+} & Partial<RoundResult> & SoundSubmissionAck> {
   const res = await fetch("/api/play/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  return res.json();
+  const data = await res.json();
+  if (!res.ok && typeof data?.accepted !== "boolean") {
+    data.accepted = false;
+  }
+  return data;
 }
 
 export async function fetchRoundResult(

@@ -50,6 +50,7 @@ export type SoundStartPayload = {
   previewSeconds: number;
   guessSeconds: number;
   startedAt: number;
+  isPractice: boolean;
 };
 
 export type SoundSubmitPayload = SoundMatchSubmission & {
@@ -57,6 +58,16 @@ export type SoundSubmitPayload = SoundMatchSubmission & {
   isPractice: boolean;
   playerAddress?: string;
   roundId?: string;
+};
+
+export type SoundSubmissionAck = {
+  accepted: boolean;
+  resolved?: boolean;
+  refunded?: boolean;
+  waiting?: boolean;
+  outcome?: "prize" | "refund" | "no-prize" | "waiting";
+  message?: string;
+  error?: string;
 };
 
 export type RoomPlayer = {

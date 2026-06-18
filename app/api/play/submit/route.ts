@@ -3,8 +3,7 @@ import {
   tier,
 } from "@/src/utils/color";
 import {
-  SOUND_DEFAULTS,
-  scoreSoundSubmission,
+  scoreSoundMatch,
   type SoundMatchSubmission,
 } from "@/src/modules/play/utils/sound";
 import { redis, parseRedisJson } from "@/lib/db/redis";
@@ -17,6 +16,10 @@ import {
 import { backendRefund } from "@/lib/sc/refund";
 import { supabaseAdmin } from "@/lib/db/supabase";
 import { usdcToRaw } from "@/lib/rooms";
+import {
+  getSoundRoundMeta,
+  validateSoundSubmission,
+} from "@/lib/sound-round";
 
 function soloRewardAmount(tierName: string): {
   reward: bigint;
@@ -179,35 +182,94 @@ export async function POST(req: Request) {
 
   const roundId = body?.roundId as string | undefined;
   const playerAddress = body?.playerAddress as string | undefined;
-  const mode = (body?.mode ?? "solo") as string;
-  const isPractice = body?.isPractice ?? false;
-  const submission = body as SoundMatchSubmission;
+  const incomingSubmission = body as SoundMatchSubmission;
+
+  if (!roundId) {
+    return NextResponse.json(
+      { accepted: false, error: "Missing roundId." },
+      { status: 400 },
+    );
+  }
+
+  const meta = await getSoundRoundMeta(roundId);
+  if (!meta) {
+    return NextResponse.json(
+      { accepted: false, error: "Round config expired or was not found." },
+      { status: 404 },
+    );
+  }
+  const mode = meta.mode;
+  const isPractice = meta.isPractice;
+
+  const validationError = validateSoundSubmission(incomingSubmission, meta);
+  if (validationError) {
+    return NextResponse.json(
+      { accepted: false, error: validationError },
+      { status: 400 },
+    );
+  }
+
+  const normalizedPlayer = playerAddress?.toLowerCase();
+  if (!isPractice) {
+    if (!normalizedPlayer || !meta.players.includes(normalizedPlayer)) {
+      return NextResponse.json(
+        { accepted: false, error: "Player is not registered for this round." },
+        { status: 403 },
+      );
+    }
+    if (incomingSubmission.walletAddress.toLowerCase() !== normalizedPlayer) {
+      return NextResponse.json(
+        { accepted: false, error: "Submission wallet does not match player." },
+        { status: 403 },
+      );
+    }
+  }
+  if (incomingSubmission.roomId.toLowerCase() !== roundId.toLowerCase()) {
+    return NextResponse.json(
+      { accepted: false, error: "Submission round does not match request." },
+      { status: 400 },
+    );
+  }
+
+  const resultKey = `round:${roundId}:result`;
+  const existingResult = parseRedisJson<Record<string, unknown>>(
+    await redis.get(resultKey),
+  );
+  if (existingResult && (mode === "solo" || isPractice)) {
+    return NextResponse.json({ accepted: true, ...existingResult });
+  }
+
+  const submissionIdentity = normalizedPlayer ?? "practice";
+  const submissionKey = `round:${roundId}:submission:${submissionIdentity}`;
+  const firstSubmission = await redis.set(
+    submissionKey,
+    JSON.stringify(incomingSubmission),
+    { ex: 3600, nx: true },
+  );
+  const submission = firstSubmission
+    ? incomingSubmission
+    : parseRedisJson<SoundMatchSubmission>(await redis.get(submissionKey));
+
+  if (!submission) {
+    return NextResponse.json(
+      { accepted: false, error: "Stored submission could not be read." },
+      { status: 409 },
+    );
+  }
+
   const timeSec =
     Array.isArray(submission?.rounds) && submission.rounds.length > 0
-      ? Math.min(
-          60,
-          submission.rounds.reduce((sum, round) => sum + round.latencyMs, 0) /
-            1000,
-        )
+      ? submission.rounds.reduce((sum, round) => sum + round.latencyMs, 0) /
+        1000
       : undefined;
 
-  const canonical = roundId
-    ? scoreSoundSubmission(roundId, submission.difficulty, submission)
-    : {
-        total: submission.totalScore,
-        percent: Number(
-          ((submission.totalScore / SOUND_DEFAULTS.maxScore) * 100).toFixed(2),
-        ),
-        perRound: [],
-      };
-
-  const totalScore = Number(submission.totalScore.toFixed(2));
-  const acc = Number(
-    ((totalScore / SOUND_DEFAULTS.maxScore) * 100).toFixed(2),
-  );
+  const canonical = scoreSoundMatch(meta.gameplayConfig, submission);
+  const totalScore = canonical.total;
+  const acc = canonical.percent;
   const t = tier(acc);
 
   const baseResult = {
+    accepted: true,
     method: "sound-total",
     accuracy: acc,
     tier: t.name,
@@ -222,7 +284,7 @@ export async function POST(req: Request) {
     canonicalScore: canonical.total,
   };
 
-  if (isPractice || !roundId || !playerAddress) {
+  if (isPractice) {
     return NextResponse.json(baseResult);
   }
 
@@ -241,7 +303,7 @@ export async function POST(req: Request) {
           source: "solo",
           players: [
             {
-              address: playerAddress.toLowerCase(),
+              address: normalizedPlayer!,
               accuracy: acc,
               tier: t.name,
               score: Math.round(acc * 100),
@@ -251,22 +313,25 @@ export async function POST(req: Request) {
           ],
           winnerAddress: null,
           rewardByAddress: {
-            [playerAddress.toLowerCase()]: 0,
+            [normalizedPlayer!]: 0,
           },
           resolved: false,
         });
-        return NextResponse.json({
+        const resultData = {
           ...baseResult,
           txHash,
           refunded,
+          outcome: "refund",
           refundReason: "solo_reserve_insufficient",
           reserveBalance: Number(reserveBalance) / 1_000_000,
-        });
+        };
+        await redis.set(resultKey, JSON.stringify(resultData), { ex: 3600 });
+        return NextResponse.json(resultData);
       }
 
       const { txHash, resolved } = await signAndResolve(
         roundId,
-        [playerAddress as `0x${string}`],
+        [normalizedPlayer as `0x${string}`],
         [reward],
         [tierEnum],
         [BigInt(Math.round(acc * 100))],
@@ -280,7 +345,7 @@ export async function POST(req: Request) {
         source: "solo",
           players: [
             {
-              address: playerAddress.toLowerCase(),
+              address: normalizedPlayer!,
               accuracy: acc,
               tier: t.name,
               score: Math.round(acc * 100),
@@ -288,22 +353,34 @@ export async function POST(req: Request) {
               totalScore,
             },
           ],
-        winnerAddress: reward > BigInt(0) ? playerAddress : null,
+        winnerAddress: reward > BigInt(0) ? normalizedPlayer : null,
         rewardByAddress: {
-          [playerAddress.toLowerCase()]: t.payout,
+          [normalizedPlayer!]: t.payout,
         },
         resolved,
       });
-      return NextResponse.json({ ...baseResult, txHash, resolved });
+      const resultData = {
+        ...baseResult,
+        txHash,
+        resolved,
+        outcome: reward > BigInt(0) ? "prize" : "no-prize",
+      };
+      await redis.set(resultKey, JSON.stringify(resultData), { ex: 3600 });
+      return NextResponse.json(resultData);
     } catch (error: unknown) {
       console.error("Solo resolve error:", error);
       const message = error instanceof Error ? error.message : "Unknown error";
-      return NextResponse.json({ ...baseResult, onChainError: message });
+      return NextResponse.json({
+        ...baseResult,
+        accepted: false,
+        onChainError: message,
+        message: "Settlement failed. Retry to use the same recorded score.",
+      });
     }
   }
 
   // ── MULTIPLAYER ───────────────────────────────────────────────────────────
-  const addrLower = playerAddress.toLowerCase();
+  const addrLower = normalizedPlayer!;
 
   console.log(
     `[submit] Player ${addrLower} submitting for round ${roundId}, mode=${mode}, acc=${acc.toFixed(1)}%`,
@@ -319,7 +396,7 @@ export async function POST(req: Request) {
         timeSec,
         totalScore,
       }),
-    { ex: 3600 },
+    { ex: 3600, nx: true },
   );
 
   const players = parseRedisJson<string[]>(
@@ -403,18 +480,22 @@ export async function resolveMultiplayer(
   const allScores: PlayerScore[] = scoreResults
     .map((s) => parseRedisJson<PlayerScore>(s))
     .filter((x): x is PlayerScore => x !== null);
-  allScores.sort((a, b) => b.accuracy - a.accuracy);
+  allScores.sort((a, b) => {
+    const scoreDiff = (b.totalScore ?? 0) - (a.totalScore ?? 0);
+    if (scoreDiff !== 0) return scoreDiff;
+    const timeDiff =
+      (a.timeSec ?? Number.MAX_SAFE_INTEGER) -
+      (b.timeSec ?? Number.MAX_SAFE_INTEGER);
+    if (timeDiff !== 0) return timeDiff;
+    return a.address.toLowerCase().localeCompare(b.address.toLowerCase());
+  });
   const winner = allScores[0];
 
   // Per-round meta set by /api/rooms/start. Defaults preserve existing matchmaking rounds.
-  const meta = parseRedisJson<{
-    casual?: boolean;
-    stakeAmount?: number;
-    source?: "public" | "private";
-  }>(await redis.get(`round:${roundId}:meta`));
-  const casual = meta?.casual === true;
-  const stakePerPlayer = usdcToRaw(meta?.stakeAmount ?? 0.5);
-  const source = meta?.source === "private" ? "private" : "public";
+  const roundMeta = await getSoundRoundMeta(roundId);
+  const casual = roundMeta?.casual === true;
+  const stakePerPlayer = usdcToRaw(roundMeta?.stakeAmount ?? 0.5);
+  const source = roundMeta?.source === "private" ? "private" : "public";
 
   if (casual) {
     const resultData = {

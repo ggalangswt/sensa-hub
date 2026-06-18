@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { SoundStartPayload } from "../types/play.types";
+import type { SoundSubmissionAck } from "../types/play.types";
 import type { SoundMatchSubmission } from "../utils/sound";
 
 const GAME_URL =
@@ -14,22 +15,31 @@ export default function SoundGameplayFrame({
   walletAddress,
   onComplete,
   onExit,
+  onReplay,
   onError,
 }: {
   config: SoundStartPayload;
   roomId: string;
   walletAddress?: string;
-  onComplete: (submission: SoundMatchSubmission) => void;
+  onComplete: (submission: SoundMatchSubmission) => Promise<SoundSubmissionAck>;
   onExit: () => void;
+  onReplay: () => Promise<void>;
   onError: (message: string) => void;
 }) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [frameReady, setFrameReady] = useState(false);
 
   const iframeSrc = useMemo(() => GAME_URL, []);
+  const iframeOrigin = useMemo(() => new URL(iframeSrc).origin, [iframeSrc]);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (
+        event.source !== iframeRef.current?.contentWindow ||
+        event.origin !== iframeOrigin
+      ) {
+        return;
+      }
       const data = event.data as
         | { type?: string; payload?: unknown }
         | undefined;
@@ -51,6 +61,11 @@ export default function SoundGameplayFrame({
         return;
       }
 
+      if (data.type === "sensa-sound:replay-request") {
+        void onReplay();
+        return;
+      }
+
       if (data.type === "sensa-sound:match-complete") {
         const payload = data.payload as
           | { submission?: SoundMatchSubmission }
@@ -59,13 +74,37 @@ export default function SoundGameplayFrame({
           onError("Gameplay completed without a valid submission payload.");
           return;
         }
-        onComplete(payload.submission);
+        void onComplete(payload.submission)
+          .then((result) => {
+            iframeRef.current?.contentWindow?.postMessage(
+              {
+                type: "sensa-sound:submission-result",
+                payload: result,
+              },
+              iframeOrigin,
+            );
+          })
+          .catch((error: unknown) => {
+            iframeRef.current?.contentWindow?.postMessage(
+              {
+                type: "sensa-sound:submission-result",
+                payload: {
+                  accepted: false,
+                  message:
+                    error instanceof Error
+                      ? error.message
+                      : "Submission failed. Try again.",
+                },
+              },
+              iframeOrigin,
+            );
+          });
       }
     };
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [onComplete, onError, onExit]);
+  }, [iframeOrigin, onComplete, onError, onExit, onReplay]);
 
   useEffect(() => {
     if (!frameReady || !iframeRef.current?.contentWindow) return;
@@ -77,13 +116,14 @@ export default function SoundGameplayFrame({
           matchId: config.roundId,
           roomId,
           walletAddress: walletAddress ?? "",
-          difficulty: config.difficulty,
-          octaveShift: config.octaveShift,
+          mode: config.mode,
+          isPractice: config.isPractice,
+          gameplayConfig: config.gameplayConfig,
         },
       },
-      "*",
+      iframeOrigin,
     );
-  }, [config, frameReady, roomId, walletAddress]);
+  }, [config, frameReady, iframeOrigin, roomId, walletAddress]);
 
   return (
     <div className="mx-auto max-w-md page-enter">
@@ -103,6 +143,7 @@ export default function SoundGameplayFrame({
           ref={iframeRef}
           title="Sensa Sound Gameplay"
           src={iframeSrc}
+          onLoad={() => setFrameReady(true)}
           className="h-[78svh] min-h-[620px] w-full border-0 bg-black"
           allow="autoplay"
         />
