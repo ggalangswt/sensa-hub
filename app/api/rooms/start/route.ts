@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { redis } from "@/lib/db/redis";
 import { getRoom, saveRoom, isLeader, generateRoundId } from "@/lib/rooms";
 import { supabaseAdmin } from "@/lib/db/supabase";
+import {
+  createSoundRoundMeta,
+  saveSoundRoundMeta,
+} from "@/lib/sound-round";
 
 export async function POST(req: Request) {
   try {
@@ -64,15 +68,17 @@ export async function POST(req: Request) {
       JSON.stringify(addresses),
       { ex: 3600 },
     );
-    await redis.set(
-      `round:${room.roundId}:meta`,
-      JSON.stringify({
+    await saveSoundRoundMeta(
+      room.roundId,
+      createSoundRoundMeta({
+        roundId: room.roundId,
+        mode: room.maxPlayers === 2 ? "duel" : "royale",
+        source: "private",
         casual: !room.paid,
         stakeAmount: room.stakeAmount,
         difficulty: room.difficulty,
-        source: "private",
+        players: addresses,
       }),
-      { ex: 3600 },
     );
 
     try {
