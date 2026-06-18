@@ -30,6 +30,7 @@ import type {
   RoundResult,
   Room,
   SoundStartPayload,
+  SoundSubmissionAck,
 } from "./types/play.types";
 import { MODE_NUM, STAKE_AMOUNT } from "./types/play.types";
 import SelectScene from "./components/SelectScene";
@@ -132,7 +133,7 @@ export default function PlayClient({
       setSoundSubmission(null);
       setSoundConfig(null);
       setSoloRefunded(false);
-      setDifficulty("medium");
+      setDifficulty("easy");
       setPhase("matched");
     },
     [],
@@ -175,6 +176,7 @@ export default function PlayClient({
       previewSeconds: soundDifficulty === "hard" ? 1.25 : 2.5,
       guessSeconds: 15,
       startedAt: Date.now(),
+      isPractice: false,
     });
     setIsPractice(false);
     setPhase("gameplay");
@@ -285,6 +287,7 @@ export default function PlayClient({
           previewSeconds: nextDifficulty === "hard" ? 1.25 : 2.5,
           guessSeconds: 15,
           startedAt: Date.now(),
+          isPractice: false,
         });
       }
       setPhase("gameplay");
@@ -372,6 +375,7 @@ export default function PlayClient({
           mode: m,
           tab: "practice",
           difficulty: nextDiff,
+          playerAddress: address ?? undefined,
         });
         setSoundConfig(j);
         setRoundId(j.roundId);
@@ -393,6 +397,7 @@ export default function PlayClient({
         mode: m,
         tab: "play",
         difficulty: nextDiff,
+        playerAddress: address ?? undefined,
       });
       setSoundConfig(j);
       setRoundId(j.roundId);
@@ -412,15 +417,19 @@ export default function PlayClient({
     }
   };
 
-  const submitGuess = useCallback(async (submission: SoundMatchSubmission) => {
-    if (isSubmittingRef.current) return;
+  const submitGuess = useCallback(async (
+    submission: SoundMatchSubmission,
+  ): Promise<SoundSubmissionAck> => {
+    if (isSubmittingRef.current) {
+      return {
+        accepted: false,
+        message: "Submission is already processing.",
+      };
+    }
     isSubmittingRef.current = true;
     setSoundSubmission(submission);
 
     if (mode !== "solo" && !isPractice) {
-      setPhase("waiting");
-      if (roundId) startResultPolling(roundId);
-
       try {
         const res = await apiSubmitGuess({
           ...submission,
@@ -429,46 +438,82 @@ export default function PlayClient({
           playerAddress: address ?? undefined,
           isPractice,
         });
+        if (!res.accepted) {
+          isSubmittingRef.current = false;
+          return {
+            accepted: false,
+            message: res.error ?? res.message ?? "Submission failed. Try again.",
+          };
+        }
         if (res.resolved || res.winner) {
           setRoundResult(res as unknown as RoundResult);
           setPhase("leaderboard");
-          return;
+          return { ...res, accepted: true };
         }
         if (res.onChainError) {
+          isSubmittingRef.current = false;
           showErrorToast("On-chain error", {
             description: res.onChainError,
             id: `submit-onchain-error:${res.onChainError}`,
           });
-          return;
+          return {
+            ...res,
+            accepted: false,
+            message: "Settlement failed. Try again.",
+          };
         }
+        setPhase("waiting");
+        if (roundId) startResultPolling(roundId);
+        return {
+          ...res,
+          accepted: true,
+          waiting: true,
+          outcome: "waiting" as const,
+        };
       } catch (err: unknown) {
+        isSubmittingRef.current = false;
         const e = err as { shortMessage?: string; message?: string };
+        const message =
+          e?.shortMessage ||
+          e?.message ||
+          "Could not submit your score. Try again.";
         showErrorToast("Submission failed", {
-          description:
-            e?.shortMessage ||
-            e?.message ||
-            "Could not submit your guess. Waiting for result.",
+          description: message,
           id: "submit-guess-error",
         });
+        return { accepted: false, message };
       }
-    } else {
-      try {
-        const res = await apiSubmitGuess({
-          ...submission,
-          mode,
-          roundId: roundId ?? undefined,
-          playerAddress: address ?? undefined,
-          isPractice,
+    }
+
+    try {
+      const res = await apiSubmitGuess({
+        ...submission,
+        mode,
+        roundId: roundId ?? undefined,
+        playerAddress: address ?? undefined,
+        isPractice,
+      });
+      if (!res.accepted) {
+        isSubmittingRef.current = false;
+        return {
+          accepted: false,
+          message: res.error ?? res.message ?? "Submission failed. Try again.",
+        };
+      }
+      if (res.refunded) {
+        setSoloRefunded(true);
+        showSuccessToast("Stake refunded", {
+          description:
+            "Solo reserve was too low for this prize. Your stake is available in Vault.",
+          id: `solo-refunded:${roundId}`,
         });
-        if (res.refunded) {
-          setSoloRefunded(true);
-          showSuccessToast("Stake refunded", {
-            description: "Solo reserve was too low for this prize. Your stake is available in Vault.",
-            id: `solo-refunded:${roundId}`,
-          });
-        }
-      } catch {}
-      resultTimeoutRef.current = setTimeout(() => setPhase("result"), 600);
+      }
+      return res;
+    } catch (err: unknown) {
+      isSubmittingRef.current = false;
+      const message =
+        err instanceof Error ? err.message : "Submission failed. Try again.";
+      return { accepted: false, message };
     }
   }, [mode, roundId, address, isPractice, startResultPolling]);
 
@@ -671,6 +716,26 @@ export default function PlayClient({
         walletAddress={address ?? undefined}
         onComplete={submitGuess}
         onExit={() => {
+          setSoundConfig(null);
+          setSoundSubmission(null);
+          setRoundResult(null);
+          setPhase("select");
+          router.push("/play/sound");
+        }}
+        onReplay={async () => {
+          isSubmittingRef.current = false;
+          if (isPractice) {
+            const next = await apiStartRound({
+              mode: "solo",
+              tab: "practice",
+              difficulty,
+              playerAddress: address ?? undefined,
+            });
+            setRoundId(next.roundId);
+            setSoundSubmission(null);
+            setSoundConfig(next);
+            return;
+          }
           setSoundConfig(null);
           setSoundSubmission(null);
           setRoundResult(null);
