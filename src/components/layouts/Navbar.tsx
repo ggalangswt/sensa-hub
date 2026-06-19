@@ -12,7 +12,7 @@ import { SensaLogo } from "@/src/components/brand/SensaLogo";
 const NAV_LINKS = [
   { href: "/play", label: "Play", icon: Gamepad2 },
   { href: "/vault", label: "Vault", icon: Vault },
-  { href: "/me", label: "Me", icon: User },
+  { href: "/player", label: "Player", icon: User },
 ];
 
 export default function Navbar() {
