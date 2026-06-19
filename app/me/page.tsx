@@ -1,8 +1,5 @@
-import React from "react";
-import Me from "@/src/modules/me/Me";
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return <Me />;
-};
-
-export default page;
+export default function LegacyMePage() {
+  redirect("/player");
+}
