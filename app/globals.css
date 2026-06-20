@@ -101,6 +101,19 @@ body.game-active nav {
   display: none !important;
 }
 
+body.sound-game-active {
+  --background: #422057;
+  --secondary-background: #261232;
+  --foreground: #FFFEE8;
+  --main: #FDFB51;
+  --main-foreground: #422057;
+  background: #422057;
+}
+
+body.sound-game-active nav {
+  display: none !important;
+}
+
 .dark body.game-active {
   --background: oklch(12% 0 0);
   --secondary-background: oklch(15% 0 0);
