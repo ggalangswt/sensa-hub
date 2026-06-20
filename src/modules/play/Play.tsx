@@ -300,12 +300,12 @@ export default function PlayClient({
 
   useEffect(() => {
     if (phase === "gameplay") {
-      document.body.classList.add("game-active");
+      document.body.classList.add("sound-game-active");
     } else {
-      document.body.classList.remove("game-active");
+      document.body.classList.remove("sound-game-active");
     }
 
-    return () => document.body.classList.remove("game-active");
+    return () => document.body.classList.remove("sound-game-active");
   }, [phase]);
 
   useEffect(() => {
