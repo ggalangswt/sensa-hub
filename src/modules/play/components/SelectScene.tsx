@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ReactNode } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
   Crown,
   Gamepad2,
   Globe,
@@ -22,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
-  RouteHeader,
   TrustStatusStrip,
 } from "@/src/components/ui/mobile-primitives";
 import UsdcIcon from "@/src/components/elements/UsdcIcon";
@@ -30,53 +26,10 @@ import { formatCompactUsdc } from "@/src/utils/utils";
 import type { Mode, TabKey } from "../types/play.types";
 import { STAKE_PRESETS } from "../types/play.types";
 import type { TargetDifficulty } from "@/src/utils/color";
+import SoundModeActionCard from "./SoundModeActionCard";
+import SoundPageHeader from "./SoundPageHeader";
 
 type RoomPanel = "closed" | "choose" | "create" | "join" | "online";
-
-function ModeActionCard({
-  icon,
-  title,
-  description,
-  meta,
-  cta,
-  onClick,
-}: {
-  icon: ReactNode;
-  title: string;
-  description: string;
-  meta: ReactNode;
-  cta: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group w-full rounded-[20px] border border-border/20 bg-[var(--console-screen)] p-3 text-left shadow-shadow transition-all duration-150 hover:-translate-y-0.5 hover:border-border/35 sm:p-4"
-    >
-      <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-border/25 bg-main text-main-foreground shadow-[inset_0_-2px_0_rgb(66_32_87_/_0.16)]">
-          {icon}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <h2 className="font-heading text-lg leading-tight text-foreground">
-              {title}
-            </h2>
-            <span className="inline-flex items-center gap-1 rounded-[10px] border border-border/20 bg-background px-2 py-1 text-xs font-heading text-foreground">
-              {cta}
-              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </div>
-          <p className="mt-1 text-sm leading-normal text-foreground/70">
-            {description}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">{meta}</div>
-        </div>
-      </div>
-    </button>
-  );
-}
 
 export default function SelectScene({
   tab,
@@ -130,26 +83,13 @@ export default function SelectScene({
 
   return (
     <div className="mx-auto max-w-2xl page-enter">
-      <RouteHeader
-        eyebrow={
-          <Badge className="gap-1.5">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-chart-2" />
-            {onlineCount !== null ? `${onlineCount} online` : "Ready"}
-          </Badge>
-        }
-        title="Sensa Sound"
-        description="Sensa Sound is live. Pick Practice, Solo stake, or a multiplayer room before the round starts."
-        action={
-          showBackToGames && onBackToGames ? (
-            <Button variant="neutral" size="sm" onClick={onBackToGames}>
-              <ArrowLeft className="h-4 w-4" />
-              Games
-            </Button>
-          ) : undefined
-        }
+      <SoundPageHeader
+        onlineCount={onlineCount}
+        showBackToGames={showBackToGames}
+        onBackToGames={onBackToGames}
       />
 
-      <div className="mb-4 grid grid-cols-2 gap-2 rounded-[18px] border border-border/20 bg-[var(--console-shell)] p-2 shadow-shadow">
+      <div className="mb-4 grid grid-cols-2 gap-2 rounded-base border-2 border-foreground bg-foreground p-2 shadow-[3px_3px_0_var(--main)]">
         <Button
           variant={tab === "single" ? "default" : "neutral"}
           onClick={() => setTab("single")}
@@ -168,7 +108,7 @@ export default function SelectScene({
 
       {tab === "single" ? (
         <div className="flex flex-col gap-3">
-          <ModeActionCard
+          <SoundModeActionCard
             icon={<Play className="h-5 w-5" />}
             title="Practice"
             description="Free warm-up round. No Deposit, no vault movement, just train the skill loop."
@@ -183,7 +123,8 @@ export default function SelectScene({
             }
           />
 
-          <ModeActionCard
+          <SoundModeActionCard
+            tone="dark"
             icon={<Swords className="h-5 w-5" />}
             title="Solo stake"
             description="Deposit 1 USDC, play a short skill round, then winnings or refunds appear in Vault."
@@ -214,7 +155,7 @@ export default function SelectScene({
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          <ModeActionCard
+          <SoundModeActionCard
             icon={<UserPlus className="h-5 w-5" />}
             title="Private room"
             description="Create a room or join by code. Pick casual or paid before friends ready up."
@@ -229,7 +170,8 @@ export default function SelectScene({
             }
           />
 
-          <ModeActionCard
+          <SoundModeActionCard
+            tone="dark"
             icon={<Globe className="h-5 w-5" />}
             title="Random match"
             description="Queue for a duel or royale. Deposit after a match is found."
