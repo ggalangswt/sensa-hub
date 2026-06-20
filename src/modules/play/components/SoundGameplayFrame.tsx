@@ -145,7 +145,7 @@ export default function SoundGameplayFrame({
           src={iframeSrc}
           onLoad={() => setFrameReady(true)}
           className="h-[78svh] min-h-[620px] w-full border-0 bg-black"
-          allow="autoplay"
+          allow="autoplay *"
         />
       </div>
     </div>
