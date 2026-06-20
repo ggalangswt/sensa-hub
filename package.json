@@ -17,7 +17,7 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@sensa/sound": "git+https://github.com/ggalangswt/sensa-sound.git#6095736a70e54f905faddb7c5701cb1715ec95b5",
+    "@sensa/sound": "git+https://github.com/ggalangswt/sensa-sound.git#b06a7ae1de9aea6a10cf916d5026f8495ffa5570",
     "@supabase/supabase-js": "^2.104.0",
     "@tanstack/react-query": "^5.99.2",
     "@types/canvas-confetti": "^1.9.0",
