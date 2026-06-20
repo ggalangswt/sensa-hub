@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import type { SoundStartPayload } from "../types/play.types";
 import type { SoundSubmissionAck } from "../types/play.types";
 import type { SoundMatchSubmission } from "../utils/sound";
+import stageStyles from "./SoundStage.module.css";
 
 const GAME_URL =
   process.env.NEXT_PUBLIC_SENSA_SOUND_GAME_URL ?? "http://127.0.0.1:4173";
@@ -127,9 +128,11 @@ export default function SoundGameplayFrame({
 
   return (
     <div className="mx-auto max-w-md page-enter">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <Badge>Sound gameplay</Badge>
-        <p className="text-xs text-foreground/60">
+      <div className="mb-3 flex items-center justify-between gap-3 rounded-base bg-foreground px-3 py-2 text-background">
+        <Badge className="border-main bg-main text-main-foreground">
+          Sound gameplay
+        </Badge>
+        <p className="text-xs font-heading text-background/75">
           {config.difficulty.toUpperCase()}
           {config.octaveShift === 1
             ? " · +8va"
@@ -138,13 +141,13 @@ export default function SoundGameplayFrame({
               : ""}
         </p>
       </div>
-      <div className="overflow-hidden rounded-[28px] border border-border/20 bg-black shadow-shadow">
+      <div className={stageStyles.stage}>
         <iframe
           ref={iframeRef}
           title="Sensa Sound Gameplay"
           src={iframeSrc}
           onLoad={() => setFrameReady(true)}
-          className="h-[78svh] min-h-[620px] w-full border-0 bg-black"
+          className="h-[78svh] min-h-[620px] w-full border-0 bg-[#261232]"
           allow="autoplay *"
         />
       </div>
