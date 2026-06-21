@@ -11,6 +11,7 @@ export type Phase =
   | "queueing"
   | "matched"
   | "lobby"
+  | "loading"
   | "gameplay"
   | "waiting"
   | "leaderboard"
