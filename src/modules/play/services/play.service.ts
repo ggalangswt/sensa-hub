@@ -20,6 +20,47 @@ export async function startRound(payload: {
   return res.json();
 }
 
+export async function fetchRoundConfig(
+  roundId: string,
+  walletAddress: string,
+): Promise<SoundStartPayload> {
+  const params = new URLSearchParams({ roundId, walletAddress });
+  const res = await fetch(`/api/play/config?${params.toString()}`, {
+    cache: "no-store",
+  });
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data?.error ?? "Could not load the sound round.");
+  }
+
+  return data as SoundStartPayload;
+}
+
+export async function fetchRoundConfigWithRetry(
+  roundId: string,
+  walletAddress: string,
+): Promise<SoundStartPayload> {
+  const delays = [0, 750, 1500];
+  let lastError: unknown;
+
+  for (const delay of delays) {
+    if (delay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    try {
+      return await fetchRoundConfig(roundId, walletAddress);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("Could not load the sound round.");
+}
+
 export async function submitGuess(payload: SoundSubmitPayload): Promise<{
   resolved?: boolean;
   winner?: string;
