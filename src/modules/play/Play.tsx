@@ -14,12 +14,12 @@ import { useRoomManager } from "./hooks/useRoomManager";
 import { useResultPolling } from "./hooks/useResultPolling";
 import { useOnlineCount } from "./hooks/useOnlineCount";
 import {
+  fetchRoundConfigWithRetry,
   startRound as apiStartRound,
   submitGuess as apiSubmitGuess,
 } from "./services/play.service";
 import { cancelMatchmaking } from "./services/matchmaking.service";
 import {
-  buildSoundGameplayConfig,
   SOUND_DEFAULTS,
   type SoundMatchSubmission,
 } from "./utils/sound";
@@ -42,6 +42,7 @@ import LeaderboardScene from "./components/LeaderboardScene";
 import SoundGameplayFrame from "./components/SoundGameplayFrame";
 import SoundWaitingScene from "./components/SoundWaitingScene";
 import SoundResultScene from "./components/SoundResultScene";
+import SoundRoundLoadingScene from "./components/SoundRoundLoadingScene";
 
 export default function PlayClient({
   initialRoomCode,
@@ -72,6 +73,7 @@ export default function PlayClient({
   const [matchedCountdown, setMatchedCountdown] = useState<number | null>(null);
   const [initRoomJoined, setInitRoomJoined] = useState(false);
   const [soloRefunded, setSoloRefunded] = useState(false);
+  const [soundConfigError, setSoundConfigError] = useState<string | null>(null);
 
   const phaseRef = useRef<{ address?: string; mode: Mode; phase: Phase }>({
     mode: "solo",
@@ -80,6 +82,7 @@ export default function PlayClient({
   const resultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isSubmittingRef = useRef(false);
   const lastErrorToastRef = useRef<string | null>(null);
+  const configRequestRef = useRef(0);
 
   const { data: soloReserveRaw } = useReadContract({
     address: GAME_ADDRESS,
@@ -89,10 +92,35 @@ export default function PlayClient({
   const soloReserveBalance = soloReserveRaw ? Number(soloReserveRaw) / 1e6 : 0;
   const onlineCount = useOnlineCount(address);
 
-  const toSoundDifficulty = useCallback(
-    (input: TargetDifficulty): "easy" | "hard" =>
-      input === "hard" || input === "god" ? "hard" : "easy",
-    [],
+  const loadMultiplayerConfig = useCallback(
+    async (nextRoundId: string) => {
+      if (!address) {
+        setSoundConfigError("Wallet connection is required to load this round.");
+        setPhase("loading");
+        return;
+      }
+
+      const requestId = ++configRequestRef.current;
+      setSoundConfig(null);
+      setSoundConfigError(null);
+      setPhase("loading");
+
+      try {
+        const config = await fetchRoundConfigWithRetry(nextRoundId, address);
+        if (requestId !== configRequestRef.current) return;
+        setSoundConfig(config);
+        setIsPractice(false);
+        setPhase("gameplay");
+      } catch (error) {
+        if (requestId !== configRequestRef.current) return;
+        setSoundConfigError(
+          error instanceof Error
+            ? error.message
+            : "Could not load the sound round.",
+        );
+      }
+    },
+    [address],
   );
 
   const { doStake, readStakedPlayers, needsApproval, stakingStep } =
@@ -162,25 +190,8 @@ export default function PlayClient({
     setRoundResult(null);
     setSoundSubmission(null);
     setSoloRefunded(false);
-    const soundDifficulty = toSoundDifficulty(room.difficulty ?? "medium");
-    setSoundConfig({
-      roundId: room.roundId,
-      mode: mKey,
-      difficulty: soundDifficulty,
-      octaveShift: 0,
-      gameplayConfig: buildSoundGameplayConfig({
-        matchId: room.roundId,
-        difficulty: soundDifficulty,
-        octaveShift: 0,
-      }),
-      previewSeconds: soundDifficulty === "hard" ? 1.25 : 2.5,
-      guessSeconds: 15,
-      startedAt: Date.now(),
-      isPractice: false,
-    });
-    setIsPractice(false);
-    setPhase("gameplay");
-  }, [toSoundDifficulty]);
+    void loadMultiplayerConfig(room.roundId);
+  }, [loadMultiplayerConfig]);
 
   const handleRoomGone = useCallback((msg?: string) => {
     if (msg) {
@@ -273,30 +284,14 @@ export default function PlayClient({
     if (matchedCountdown <= 0) {
       setMatchedCountdown(null);
       if (roundId) {
-        const nextDifficulty = toSoundDifficulty(difficulty);
-        setSoundConfig({
-          roundId,
-          mode,
-          difficulty: nextDifficulty,
-          octaveShift: 0,
-          gameplayConfig: buildSoundGameplayConfig({
-            matchId: roundId,
-            difficulty: nextDifficulty,
-            octaveShift: 0,
-          }),
-          previewSeconds: nextDifficulty === "hard" ? 1.25 : 2.5,
-          guessSeconds: 15,
-          startedAt: Date.now(),
-          isPractice: false,
-        });
+        void loadMultiplayerConfig(roundId);
       }
-      setPhase("gameplay");
       return;
     }
 
     const id = setTimeout(() => setMatchedCountdown((c) => (c ?? 0) - 1), 1000);
     return () => clearTimeout(id);
-  }, [difficulty, matchedCountdown, mode, phase, roundId, toSoundDifficulty]);
+  }, [loadMultiplayerConfig, matchedCountdown, phase, roundId]);
 
   useEffect(() => {
     if (phase === "gameplay") {
@@ -703,6 +698,25 @@ export default function PlayClient({
             description: "Everyone is locked in. Loading the next round.",
             id: `room-start:${code}`,
           });
+        }}
+      />
+    );
+  }
+
+  if (phase === "loading") {
+    return (
+      <SoundRoundLoadingScene
+        error={soundConfigError}
+        onRetry={() => {
+          if (roundId) void loadMultiplayerConfig(roundId);
+        }}
+        onExit={() => {
+          configRequestRef.current += 1;
+          setSoundConfig(null);
+          setSoundConfigError(null);
+          setRoundId(null);
+          setPhase("select");
+          router.push("/play/sound");
         }}
       />
     );
